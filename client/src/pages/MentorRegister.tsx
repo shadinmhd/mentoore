@@ -1,0 +1,77 @@
+import { useEffect, useState } from 'react'
+import Input from './components/form/Input'
+import SubmitButton from './components/form/SubmitButton'
+import Select from './components/form/Select'
+import Api from '../services/Api'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from "react-toastify"
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../redux/store'
+import userActions from '../redux/features/userActions'
+
+interface CategoyType {
+    name: string
+}
+
+const MentorRegister = () => {
+    const [categories, setCategories] = useState([])
+    const [user, setUser] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        password1: "",
+        password2: "",
+        category: ""
+    })
+
+    const dispatch: AppDispatch = useDispatch()
+    const navigate = useNavigate()
+    useEffect(() => {
+        (async () => {
+            const { data } = await Api.get("/category/get")
+            setCategories(data.categories)
+        })()
+    }, [])
+
+    const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if (user.password1 == user.password2) {
+            console.log(user)
+            const response = await dispatch(userActions.mentorRegister({ firstName: user.firstName, lastName: user.lastName, email: user.email, password: user.password1, category: user.category }))
+            if (response.payload.success) {
+                navigate("/login")
+            }
+        }
+        else
+            toast.error("password doesnt match")
+    }
+    const changeHander = (e: React.ChangeEvent<any>) => {
+        const { name, value } = e.target
+        setUser((prevUser) => ({ ...prevUser, [name]: value }))
+    }
+    return (
+        <div className='flex items-center h-screen justify-center'>
+            <form onSubmit={submitHandler} className='rounded-lg flex px-5 py-9 flex-col gap-5 items-center bg-white drop-shadow-lg'>
+                <p className='text-3xl mb-5 font-bold text-blue-600'>
+                    Register
+                </p>
+                <div className='flex flex-col gap-2'>
+                    <Input name='firstName' placeholder='First name' type='text' onchange={changeHander} />
+                    <Input name='lastName' placeholder='Last name' type='text' onchange={changeHander} />
+                    <Input name='email' placeholder='Email' type='text' onchange={changeHander} />
+                    <Input name='password1' placeholder='password' type='password' onchange={changeHander} />
+                    <Input name='password2' placeholder='confirm password' type='password' onchange={changeHander} />
+                    <span className='text-blue-600'>category</span>
+                    {
+                        categories &&
+                        <Select className='' name='category' options={categories.map((e: CategoyType) => e.name != "All" ? e : { name: " " })} onchange={changeHander} />
+                    }
+                </div>
+                <SubmitButton text="Register" />
+                <Link to="/login" className='text-blue-500 underline'>all ready have an account?</Link>
+            </form>
+        </div>
+    )
+}
+
+export default MentorRegister
