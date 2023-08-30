@@ -1,20 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import Api from "../../services/Api";
 
-export const categoryGet = createAsyncThunk(
-    "category/get",
-    async (_, { rejectWithValue }) => {
+const login = createAsyncThunk(
+    "auth/login",
+    async (loginInfo, { rejectWithValue }) => {
         try {
-            const { data } = await Api.get("/category")
+            const { data } = await Api.post("/login", loginInfo)
             if (data.success) {
                 return data
             } else {
                 return rejectWithValue({ message: data.message })
             }
-        } catch (error) {
+        } catch (err) {
             return rejectWithValue({ message: "something went wrong" })
         }
     }
 )
 
-export default categoryGet
+export default { login }
