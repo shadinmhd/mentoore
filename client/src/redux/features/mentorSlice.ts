@@ -21,3 +21,4 @@ const mentorSlice = createSlice({
     },
 })
 
+export default mentorSlice
