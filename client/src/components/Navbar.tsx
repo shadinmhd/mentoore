@@ -1,10 +1,9 @@
 import { useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { RootState } from '../redux/store'
 
 const Navbar = () => {
     const type = useSelector((state: RootState) => state.auth.type)
-    const navigate = useNavigate()
     let loggedIn
     if (localStorage.getItem("token"))
         loggedIn = true

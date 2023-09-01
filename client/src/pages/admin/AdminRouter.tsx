@@ -5,7 +5,7 @@ import Messages from './Messages';
 import Bookings from './Bookings';
 import Settings from './Settings';
 import Transactions from './Transactions';
-import { faBook, faDashboard, faGear, faMessage, faWallet, faExchange, faPerson, faUser, faUserGraduate, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faDashboard, faGear, faMessage, faExchange, faUserGraduate, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { useEffect } from 'react';
 import { AppDispatch, RootState } from '../../redux/store';
 import { useDispatch, useSelector } from 'react-redux';

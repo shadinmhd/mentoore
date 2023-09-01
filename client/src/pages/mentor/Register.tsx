@@ -3,10 +3,8 @@ import Input from '../../components/form/Input'
 import SubmitButton from '../../components/form/SubmitButton'
 import Select from '../../components/form/Select'
 import Api from '../../services/Api'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { toast } from "react-toastify"
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../redux/store'
 
 interface CategoyType {
     name: string
@@ -23,8 +21,6 @@ const MentorRegister = () => {
         category: ""
     })
 
-    const dispatch: AppDispatch = useDispatch()
-    const navigate = useNavigate()
     useEffect(() => {
         (async () => {
             const { data } = await Api.get("/category/get")
@@ -59,7 +55,7 @@ const MentorRegister = () => {
                     <span className='text-blue-600'>category</span>
                     {
                         categories &&
-                        <Select className='' name='category' options={categories.map((e: CategoyType) => e.name != "All" ? e : { name: " " })} onchange={changeHander} />
+                        <Select value='' className='' name='category' options={categories.map((e: CategoyType) => e.name != "All" ? e : { name: " " })} onchange={changeHander} />
                     }
                 </div>
                 <SubmitButton text="Register" />
