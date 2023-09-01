@@ -1,9 +1,14 @@
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { RootState } from '../../redux/store'
+import { Link, useNavigate } from 'react-router-dom'
+import { RootState } from '../redux/store'
 
 const Navbar = () => {
-    const loggedIn = useSelector((state: RootState) => state.auth.loggedIn)
+    const type = useSelector((state: RootState) => state.auth.type)
+    const navigate = useNavigate()
+    let loggedIn
+    if (localStorage.getItem("token"))
+        loggedIn = true
+
     return (
         <header className='py-3 px-10 fixed bg-white top-0 left-0 w-screen flex items-center justify-between'>
             <Link to="/" className='font-sans text-blue-500 text-xl font-semibold'>
@@ -16,7 +21,7 @@ const Navbar = () => {
             </div>
             <div className='flex items-center gap-2'>
                 {loggedIn ?
-                    <Link className='text-center bg-blue-500 text-white py-2 px-3 font-semibold font-sans rounded-lg' to="/user/dashboard" >Dashboard</Link> :
+                    <Link className='text-center bg-blue-500 text-white py-2 px-3 font-semibold font-sans rounded-lg' to={`/${type}`} >Dashboard</Link> :
                     <>
                         <Link className='text-center bg-white text-blue-500 py-2 px-3 font-semibold font-sans rounded-lg' to="/user/register">Register</Link>
                         <Link className='text-center bg-blue-500 text-white py-2 px-3 font-semibold font-sans rounded-lg' to="/login">Login</Link>

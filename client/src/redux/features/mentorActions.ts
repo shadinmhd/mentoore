@@ -51,7 +51,7 @@ export const mentorGet = createAsyncThunk(
 
 export const mentorEdit = createAsyncThunk(
     "mentor/edit",
-    async (editInfo, { rejectWithValue }) => {
+    async (editInfo: FormData, { rejectWithValue }) => {
         try {
             const { data } = await Api.put("/mentor", editInfo)
             if (data.success) {

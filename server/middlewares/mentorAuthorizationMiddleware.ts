@@ -11,7 +11,7 @@ const mentorAuthorizationMiddleware = async (req: Request, res: Response, next: 
             })
 
         const payload = jwt.verify(token, process.env.jwt as string) as { type: string, id: string }
-        if (payload.type == "user") {
+        if (payload.type == "mentor") {
             next()
         }
         else

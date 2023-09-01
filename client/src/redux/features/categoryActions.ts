@@ -17,4 +17,4 @@ export const categoryGet = createAsyncThunk(
     }
 )
 
-export default categoryGet
+export default { categoryGet }

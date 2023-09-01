@@ -1,20 +1,24 @@
 
 import { Link } from "react-router-dom"
-import { faGear, faBook, faMessage, faDashboard, faPerson } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome"
 
-const SideBar = () => {
+interface Props {
+    to: string,
+    icon: FontAwesomeIconProps['icon'],
+    text: string
+}
+
+
+const SideBar: React.FC<{ buttons: Props[] }> = ({ buttons }) => {
     return (
         <div className='flex gap-5 text-blue-600 bg-white flex-col h-screen shadow-lg w-fit px-5 py-10'>
             <Link to="/"
                 className="text-4xl font-semibold font-sans mb">
                 Mentoore
             </Link>
-            <Button to="/user/dashboard" icon={faDashboard} text="dashboard" />
-            <Button to="/user/messages" icon={faMessage} text="messages" />
-            <Button to="/user/mentors" icon={faPerson} text="mentors" />
-            <Button to="/user/bookings" icon={faBook} text="bookings" />
-            <Button to="/user/settings" icon={faGear} text="settings" />
+            {buttons.map((e, i) => {
+                return <Button key={i} to={e.to} icon={e.icon} text={e.text} />
+            })}
         </div>
     )
 }

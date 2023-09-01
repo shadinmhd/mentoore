@@ -58,8 +58,8 @@ export const userGet = async (req: Request, res: Response) => {
 export const userUpdate = async (req: Request, res: Response) => {
     try {
         const { name, email } = req.body
-        const id = jwt.verify(req.headers.authorization!, process.env.jwt as string)
-        const oldUser = await userModel.findById(id)
+        const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string) as {id : string}
+        const oldUser = await userModel.findById(payload.id)
         if (!oldUser) {
             return res.send({
                 success: false,
@@ -71,7 +71,7 @@ export const userUpdate = async (req: Request, res: Response) => {
             image = `http://localhost:8000/public/user/${name}.${req.file.filename.split(".")[1]}`
         }
 
-        const updatededUser = await userModel.findOneAndUpdate({ _id: id }, { name, email, image })
+        const updatededUser = await userModel.findOneAndUpdate({ _id: payload.id }, { name, email, image })
         res.send({
             success: true,
             message: "profile updated",

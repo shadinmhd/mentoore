@@ -53,9 +53,9 @@ export const userGet = createAsyncThunk(
 
 export const userEdit = createAsyncThunk(
     "user/edit",
-    async (editInfo, { rejectWithValue }) => {
+    async (editData: FormData, { rejectWithValue }) => {
         try {
-            const { data } = await Api.put("/user", editInfo)
+            const { data } = await Api.put("/user", editData)
             if (data.success) {
                 return data
             } else {
@@ -85,4 +85,4 @@ export const userDelete = createAsyncThunk(
     }
 )
 
-export default { userLogin }
+export default { userLogin, userRegister, userEdit, userDelete, userGet }

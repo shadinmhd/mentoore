@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import Input from './components/form/Input'
-import SubmitButton from './components/form/SubmitButton'
+import Input from '../../components/form/Input'
+import SubmitButton from '../../components/form/SubmitButton'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../redux/store'
-import userActions from '../redux/features/userActions'
+import { AppDispatch } from '../../redux/store'
 import { toast } from "react-toastify"
 
 const UserRegister = () => {
@@ -21,10 +20,6 @@ const UserRegister = () => {
   const submitHandler = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (user.password1 == user.password2) {
-      const response = await dispatch(userActions.userRegister({ name: user.name, email: user.email, password: user.password1 }))
-      if (response.payload.success) {
-        navigate("/login")
-      }
     }
     else
       toast.error("password doesnt match")

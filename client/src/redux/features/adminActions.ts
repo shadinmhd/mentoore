@@ -49,4 +49,21 @@ export const adminGet = createAsyncThunk(
     }
 )
 
-export default { adminLogin, adminRegister, adminGet }
+export const adminEdit = createAsyncThunk(
+    "admin/edit",
+    async (data: FormData, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.put("/admin")
+            if (data.success) {
+                return data
+            }
+            else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "something went wrong" })
+        }
+    }
+)
+
+export default { adminLogin, adminRegister, adminGet , adminEdit }

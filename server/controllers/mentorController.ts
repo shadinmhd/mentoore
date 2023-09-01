@@ -56,8 +56,9 @@ const getAllMentors = async (req: Request, res: Response) => {
 
 const getMentor = async (req: Request, res: Response) => {
     try {
-        const id = jwt.verify(req.headers.authorization!, process.env.jwt as string)
-        const mentor = await mentorModel.findOne({ _id: id }, { password: 0 })
+        const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string) as { id: string}
+        const mentor = await mentorModel.findOne({ _id: payload.id }, { password: 0 })
+        console.log(payload?.id)
         res.send({
             success: true,
             message: "user fetched",

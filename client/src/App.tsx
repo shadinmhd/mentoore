@@ -1,23 +1,24 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
-import Register from './pages/MentorRegister'
+import Register from './pages/mentor/Register'
 import { ToastContainer } from 'react-toastify'
 import Mentors from './pages/Mentors'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from './redux/store'
 import Contact from './pages/Contact'
-import TypeRouter from './pages/components/TypeRouter'
-import UserRegister from './pages/userRegister'
-import MentorRegister from './pages/MentorRegister'
-import authSlice from './redux/features/authSlice'
 import About from './pages/About'
+import UserRouter from './pages/user/UserRouter'
+import MentorRouter from './pages/mentor/MentorRouter'
+import { useEffect } from "react"
+import { AppDispatch } from './redux/store'
+import { useDispatch } from 'react-redux'
+import authSlice from './redux/features/authSlice'
+import AdminRouter from './pages/admin/AdminRouter'
 
 const App = () => {
   const dispatch: AppDispatch = useDispatch()
-  const loggedIn = useSelector((state: RootState) => state.auth.loggedIn)
-
-  dispatch(authSlice.actions.init())
+  useEffect(() => {
+    dispatch(authSlice.actions.init())
+  })
 
   return (
     <>
@@ -30,9 +31,9 @@ const App = () => {
         <Route path='/contact' element={<Contact />} />
         <Route path='/about' element={<About />} />
         <Route path='/mentors' element={<Mentors />} />
-        <Route path='/user/register' element={<UserRegister />} />
-        <Route path='/mentor/register' element={<MentorRegister />} />
-        <Route path='/user/*' element={loggedIn ? <TypeRouter /> : <Navigate to="/login" />} />
+        <Route path='/admin/*' element={<AdminRouter />} />
+        <Route path='/mentor/*' element={<MentorRouter />} />
+        <Route path='/user/*' element={<UserRouter />} />
       </Routes>
     </>
   )

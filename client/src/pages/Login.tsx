@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import Input from './components/form/Input'
-import SubmitButton from './components/form/SubmitButton'
+import Input from '../components/form/Input'
+import SubmitButton from '../components/form/SubmitButton'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../redux/store'
 import { PuffLoader } from 'react-spinners'
 import authActions from '../redux/features/authActions'
+import userActions from '../redux/features/userActions'
+import mentorActions from '../redux/features/mentorActions'
+import adminActions from '../redux/features/adminActions'
 
 const Login = () => {
     const [user, setUser] = useState({
@@ -21,7 +24,13 @@ const Login = () => {
         e.preventDefault()
         const response = await dispatch(authActions.login({ ...user }))
         if (response.payload.success) {
-            navigate("/user")
+            navigate(`/${localStorage.getItem("type")}`)
+            if (response.payload.type == "user")
+                dispatch(userActions.userGet())
+            if (response.payload.type == "mentor")
+                dispatch(mentorActions.mentorGet())
+            if (response.payload.type == "admin")
+                dispatch(adminActions.adminGet())
         }
     }
     const changeHander = (e: React.ChangeEvent<HTMLInputElement>) => {

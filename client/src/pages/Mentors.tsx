@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Api from "../services/Api";
-import Navbar from "./components/Navbar";
-import Select from "./components/form/Select";
+import Navbar from "../components/Navbar";
+import Select from "../components/form/Select";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
-import { getCategories } from "../redux/features/categoryActions";
+import categoryActions from "../redux/features/categoryActions";
 
 interface MentorsType {
   firstName: string;
@@ -19,16 +19,10 @@ const Mentors = () => {
   const [category, setCategory] = useState("");
 
   const dispatch: AppDispatch = useDispatch();
-  const categories = useSelector((state: RootState) => state.category.data);
+  const categories = useSelector((state: RootState) => state.category.categories);
 
   useEffect(() => {
-    dispatch(getCategories());
-    (async () => {
-      const { data } = await Api.get("/mentor/getAll");
-      setMentors(data.mentors);
-      console.log(data.mentors)
-      setFilteredMentors(data.mentors);
-    })();
+    dispatch(categoryActions.categoryGet());
   }, []);
 
   const changeHandler = (e: React.ChangeEvent<any>) => {

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
-import heroImage from "../../../assets/hero.png"
-import searchIcon from "../../../assets/search.svg"
+import heroImage from "../../assets/hero.png"
+import searchIcon from "../../assets/search.svg"
 
 const Hero = () => {
     return (

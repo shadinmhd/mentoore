@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react"
-import SubmitButton from "../components/form/SubmitButton"
+import React, { useState, useEffect } from "react"
+import SubmitButton from "../../components/form/SubmitButton"
 import userIcon from "../../assets/user.png"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, RootState } from "../../redux/store"
 import userActions from "../../redux/features/userActions"
 import authSlice from "../../redux/features/authSlice"
+import { useNavigate } from "react-router-dom"
 
 
 const Settings = () => {
@@ -12,6 +13,11 @@ const Settings = () => {
     const dispatch: AppDispatch = useDispatch()
     const [previewImage, setPreviewImage] = useState<File | null>()
     let user = useSelector((state: RootState) => state.user?.user)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        dispatch(userActions.userGet())
+    }, [dispatch])
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -22,7 +28,7 @@ const Settings = () => {
         if (previewImage) {
             data.append("image", previewImage)
         }
-        dispatch(userActions.userUpdate({ data }))
+        dispatch(userActions.userEdit(data))
     }
     const imageChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { files } = e.target
@@ -38,6 +44,7 @@ const Settings = () => {
     const logout = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         dispatch(authSlice.actions.logout())
+        navigate("/login")
     }
 
     return (
@@ -55,7 +62,6 @@ const Settings = () => {
                 <button onClick={logout} className='hover:bg-white hover:text-red-600 hover:shadow-2xl transition-all w-full py-[7px] px-2 bg-red-600 rounded-lg text-white'>
                     logout
                 </button>
-
                 <button className='hover:bg-white hover:text-red-600 hover:shadow-2xl transition-all w-full py-[7px] px-2 bg-red-600 rounded-lg text-white'>
                     delete
                 </button>

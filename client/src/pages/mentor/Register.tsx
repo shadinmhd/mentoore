@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
-import Input from './components/form/Input'
-import SubmitButton from './components/form/SubmitButton'
-import Select from './components/form/Select'
-import Api from '../services/Api'
+import Input from '../../components/form/Input'
+import SubmitButton from '../../components/form/SubmitButton'
+import Select from '../../components/form/Select'
+import Api from '../../services/Api'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from "react-toastify"
 import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../redux/store'
-import userActions from '../redux/features/userActions'
+import { AppDispatch } from '../../redux/store'
 
 interface CategoyType {
     name: string
@@ -37,10 +36,6 @@ const MentorRegister = () => {
         e.preventDefault()
         if (user.password1 == user.password2) {
             console.log(user)
-            const response = await dispatch(userActions.mentorRegister({ firstName: user.firstName, lastName: user.lastName, email: user.email, password: user.password1, category: user.category }))
-            if (response.payload.success) {
-                navigate("/login")
-            }
         }
         else
             toast.error("password doesnt match")
