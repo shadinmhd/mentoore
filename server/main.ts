@@ -5,6 +5,7 @@ import sessoin from "express-session"
 import cors from "cors"
 import dotenv from "dotenv"
 import morgan from "morgan"
+import adminAuthorizatoinMiddleware from "./middlewares/adminAuthorizationMiddleware"
 
 import connectDb from "./configs/connectDb"
 
@@ -34,7 +35,7 @@ import adminRoute from "./routes/adminRoute"
 import categoryRoute from "./routes/categoryRoute"
 
 app.use("/", indexRoute)
-app.use("/admin", adminRoute)
+app.use("/admin", adminAuthorizatoinMiddleware, adminRoute)
 app.use("/mentor", mentorRoute)
 app.use("/user", userRoute)
 app.use("/category", categoryRoute)
