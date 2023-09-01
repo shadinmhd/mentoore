@@ -1,27 +1,42 @@
 import SideBar from '../../components/SideBar';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Messages from './Messages';
 import Bookings from './Bookings';
 import Settings from './Settings';
 import Transactions from './Transactions';
-import { faBook, faDashboard, faGear, faMessage, faWallet, faExchange } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faDashboard, faGear, faMessage, faWallet, faExchange, faPerson, faUser, faUserGraduate, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { useEffect } from 'react';
-import { AppDispatch } from '../../redux/store';
-import { useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 import adminActions from '../../redux/features/adminActions';
+import Mentors from './Mentors';
+import Users from './Users';
+import { toast } from "react-toastify"
+
 
 const AdminRouter = () => {
+    const type = useSelector((state: RootState) => state.auth.type)
+
     const dispatch: AppDispatch = useDispatch()
+    const navigate = useNavigate()
+
     useEffect(() => {
-        dispatch(adminActions.adminGet())
+        if (type !== "admin") {
+            navigate("/")
+            toast.error("not authorized")
+        }
+        else
+            dispatch(adminActions.adminGet())
     })
+
     const buttons = [
         { to: "dashboard", icon: faDashboard, text: "dashboard" },
         { to: "messages", icon: faMessage, text: "messages" },
+        { to: "mentors", icon: faChalkboardTeacher, text: "mentors" },
+        { to: "users", icon: faUserGraduate, text: "users" },
         { to: "bookings", icon: faBook, text: "bookings" },
-        { to: "wallet", icon: faWallet, text: "wallet" },
-        { to: "transaction", icon: faExchange, text: "transactions" },
+        { to: "transcations", icon: faExchange, text: "transactions" },
         { to: "settings", icon: faGear, text: "settings" }
     ]
     return (
@@ -34,6 +49,8 @@ const AdminRouter = () => {
                     <Route path='/messages' element={<Messages />} />
                     <Route path='/bookings' element={<Bookings />} />
                     <Route path='/settings' element={<Settings />} />
+                    <Route path='/mentors' element={<Mentors />} />
+                    <Route path='/users' element={<Users />} />
                     <Route path='/transcations' element={<Transactions />} />
                 </Routes >
             </div>

@@ -5,7 +5,7 @@ export const categoryGet = createAsyncThunk(
     "category/get",
     async (_, { rejectWithValue }) => {
         try {
-            const { data } = await Api.get("/category")
+            const { data } = await Api.get("/category/get")
             if (data.success) {
                 return data
             } else {

@@ -81,4 +81,20 @@ export const mentorDelete = createAsyncThunk(
     }
 )
 
-export default { mentorLogin, mentorRegister, mentorGet, mentorEdit, mentorDelete }
+export const mentorGetAll = createAsyncThunk(
+    "mentor/getAll",
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.get("mentor/getAll")
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "somethign went wrong" })
+        }
+    }
+)
+
+export default { mentorLogin, mentorRegister, mentorGet, mentorEdit, mentorDelete , mentorGetAll}

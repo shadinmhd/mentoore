@@ -1,28 +1,38 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Settings from './Settings';
 import Messages from './Messages';
 import Bookings from './Bookings';
 import Wallet from './Wallet';
 import SideBar from '../../components/SideBar';
-import { AppDispatch } from '../../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import userActions from '../../redux/features/userActions';
 import { faGear, faBook, faWallet, faDashboard, faMessage } from "@fortawesome/free-solid-svg-icons"
+import { toast } from "react-toastify"
 
 const UserRouter = () => {
+    const type = useSelector((state: RootState) => state.auth.type)
+
     const dispatch: AppDispatch = useDispatch()
+    const navigate = useNavigate()
+
     useEffect(() => {
-        dispatch(userActions.userGet())
+        if (type !== "user") {
+            navigate("/")
+            toast.error("not authorized")
+        }
+        else
+            dispatch(userActions.userGet())
     })
 
     const buttons = [
         { to: "dashboard", icon: faDashboard, text: "dashboard" },
-        { to: "messages", icon: faMessage, text: "dashboard" },
-        { to: "bookings", icon: faBook, text: "dashboard" },
-        { to: "wallet", icon: faWallet, text: "dashboard" },
-        { to: "settings", icon: faGear, text: "dashboard" }
+        { to: "messages", icon: faMessage, text: "messages" },
+        { to: "bookings", icon: faBook, text: "bookings" },
+        { to: "wallet", icon: faWallet, text: "wallet" },
+        { to: "settings", icon: faGear, text: "settings" }
     ]
     return (
         <div className='flex'>
