@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../../components/Navbar";
 import Select from "../../components/form/Select";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import categoryActions from "../../redux/features/categoryActions";
 import mentorActions from "../../redux/features/mentorActions";
 import { PuffLoader } from "react-spinners";
+import { Link } from "react-router-dom";
 
 interface MentorsType {
   firstName: string;
@@ -54,8 +54,7 @@ const Mentors = () => {
 
   return (
     <>
-      <Navbar />
-      <div className={`h-screen w-screen px-10 pt-20 flex flex-col gap-5 ${loading && "items-center justify-center"}`}>
+      <div className={`h-screen w-full px-10 pt-20 flex flex-col gap-5 ${loading && "items-center justify-center"}`}>
         {loading ? (
           <PuffLoader color="#2563eb" />
         ) : (
@@ -77,12 +76,19 @@ const Mentors = () => {
               />
             </div>
             <div>
+              <div className="text-blue-600 text-xl font-bold flex justify-between">
+                <div>name</div>
+                <div>category</div>
+                <div>status</div>
+              </div>
+
               {filteredMentors.map((mentor, index) => (
-                <div className="text-blue-600 flex justify-between" key={index}>
+                <Link to={`/admin/mentor/${mentor._id}`} className="text-blue-600 flex justify-between hover:bg-blue-500 hover:text-white rounded-lg p-2 transition-all hover:scale-105 hover:p-3" key={index}>
+
                   <div>{mentor.firstName}</div>
                   <div>{mentor.category}</div>
                   <div>{mentor.status}</div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

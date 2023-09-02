@@ -2,15 +2,36 @@ import { createSlice } from "@reduxjs/toolkit";
 import userActions from "./userActions";
 import { toast } from "react-toastify"
 
-const initialState = {
+interface UserType {
+    name: string,
+    _id: string,
+    image: string,
+    email: string,
+    status: string
+}
+
+interface InitialState {
+    loading: boolean,
+    error: boolean,
+    user: {
+        name: string,
+        email: string,
+        _id: string,
+        image: string
+    },
+    users: UserType[]
+}
+
+const initialState: InitialState = {
     loading: false,
     error: false,
     user: {
-        name: "",
-        email: "",
         _id: "",
-        image: ""
-    }
+        email: "",
+        image: "",
+        name: ""
+    },
+    users: []
 }
 
 const userSlice = createSlice({
@@ -33,7 +54,7 @@ const userSlice = createSlice({
             toast.error((payload as { message: string }).message)
         })
         //get
-        
+
         // register
         builder.addCase(userActions.userRegister.fulfilled, (state) => {
             state.loading = false
@@ -43,10 +64,10 @@ const userSlice = createSlice({
             state.loading = true
             state.error = false
         })
-        builder.addCase(userActions.userRegister.rejected, (state, {payload}) => {
+        builder.addCase(userActions.userRegister.rejected, (state, { payload }) => {
             state.loading = false
             state.error = true
-            toast.success((payload as {message : string}).message)
+            toast.success((payload as { message: string }).message)
         })
 
         // register

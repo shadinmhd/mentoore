@@ -6,6 +6,10 @@ interface loginType {
     password: string
 }
 
+interface OtpType {
+    otp: string
+}
+
 const login = createAsyncThunk(
     "auth/login",
     async ({ email, password }: loginType, { rejectWithValue }) => {
@@ -22,4 +26,21 @@ const login = createAsyncThunk(
     }
 )
 
-export default { login }
+const verifyOtp = createAsyncThunk(
+    "auth/verifyOtp",
+    async ({ otp }: OtpType, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.post("/otp", { otp })
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "something went wrong" })
+        }
+
+    }
+)
+
+export default { login, verifyOtp }

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { AppDispatch, RootState } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategories } from "../../redux/features/categoryActions";
+import { categoryGet } from "../../redux/features/categoryActions";
 import Api from "../../services/Api";
-import Select from "../components/form/Select";
+import Select from "../../components/form/Select";
 
 interface MentorsType {
     firstName: string;
@@ -18,10 +18,10 @@ const Mentors = () => {
     const [category, setCategory] = useState("");
 
     const dispatch: AppDispatch = useDispatch();
-    const categories = useSelector((state: RootState) => state.category.data);
+    const categories = useSelector((state: RootState) => state.category.categories);
 
     useEffect(() => {
-        dispatch(getCategories());
+        dispatch(categoryGet());
         (async () => {
             const { data } = await Api.get("/mentor/getAll");
             setMentors(data.mentors);
@@ -64,7 +64,7 @@ const Mentors = () => {
                             placeholder="Search by name"
                             type="text"
                         />
-                        <Select className="w-44" onchange={changeHandler} options={categories} name="category" />
+                        <Select value="" className="w-44" onchange={changeHandler} options={categories} name="category" />
                     </div>
                     <div>
                         {filteredMentors.map((e, i) => (

@@ -12,7 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import adminActions from '../../redux/features/adminActions';
 import Mentors from './Mentors';
 import Users from './Users';
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
+import User from './User';
+import Mentor from './Mentor';
 
 
 const AdminRouter = () => {
@@ -44,12 +46,14 @@ const AdminRouter = () => {
             <SideBar buttons={buttons} />
             <div className='flex items-center justify-center w-screen'>
                 <Routes>
-                    <Route index element={<Navigate to="/admin/dashboard" />} />
+                    <Route path='' element={<Navigate to="/admin/dashboard" />} />
                     <Route path='/dashboard' element={<Dashboard />} />
                     <Route path='/messages' element={<Messages />} />
                     <Route path='/bookings' element={<Bookings />} />
                     <Route path='/settings' element={<Settings />} />
                     <Route path='/mentors' element={<Mentors />} />
+                    <Route path='/user/:id' element={<User />} />
+                    <Route path='/mentor/:id' element={<Mentor />} />
                     <Route path='/users' element={<Users />} />
                     <Route path='/transcations' element={<Transactions />} />
                 </Routes >

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import authActions from "./authActions";
+import { toast } from "react-toastify";
 
 const initialState = {
     loading: false,
@@ -20,7 +21,6 @@ const authSlice = createSlice({
         init: (state) => {
             if (localStorage.getItem("token")) {
                 state.type = localStorage.getItem("type") as string
-                console.log("init")
             }
 
         }
@@ -29,11 +29,37 @@ const authSlice = createSlice({
         // login
         builder.addCase(authActions.login.fulfilled, (state, { payload }) => {
             state.loading = false
-            state.type = payload?.token
+            state.type = payload?.type
             localStorage.setItem("token", payload?.token)
             localStorage.setItem("type", payload?.type)
         })
+        builder.addCase(authActions.login.pending, (state) => {
+            state.loading = false
+            state.error = false
+        })
+        builder.addCase(authActions.login.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = true
+            toast.error((payload as { message: string }).message)
+        })
         // login
+
+        // otp
+        builder.addCase(authActions.verifyOtp.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.error = true
+            state.type = payload?.type
+        })
+        builder.addCase(authActions.verifyOtp.pending, (state) => {
+            state.loading = true
+            state.error = false
+        })
+        builder.addCase(authActions.verifyOtp.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = true
+            toast.error((payload as { message: string })?.message)
+        })
+        // otp
     },
 })
 

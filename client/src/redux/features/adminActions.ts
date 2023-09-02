@@ -51,9 +51,9 @@ export const adminGet = createAsyncThunk(
 
 export const adminEdit = createAsyncThunk(
     "admin/edit",
-    async (data: FormData, { rejectWithValue }) => {
+    async (editInfo: FormData, { rejectWithValue }) => {
         try {
-            const { data } = await Api.put("/admin")
+            const { data } = await Api.put("/admin", editInfo)
             if (data.success) {
                 return data
             }
@@ -66,4 +66,39 @@ export const adminEdit = createAsyncThunk(
     }
 )
 
-export default { adminLogin, adminRegister, adminGet , adminEdit }
+export const userGetAll = createAsyncThunk(
+    "admin/userGetAll",
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.get("/admin/userGetAll")
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "something went wrong" })
+        }
+    }
+)
+
+export const userGet = createAsyncThunk(
+    "admin/userGet",
+    async ({ id }: { id: string }, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.get(`/admin/user/${id}`)
+            if(data.success){
+                return data
+            }else{
+                return rejectWithValue({message : data.message})
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "something went wrong" })
+        }
+    }
+)
+
+export default {
+    adminLogin, adminRegister, adminGet, adminEdit,
+    userGetAll, userGet
+}

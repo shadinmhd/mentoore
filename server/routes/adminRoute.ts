@@ -13,8 +13,7 @@ router.route("/")
     .post()
 
 // user routes
-router.get("user/getAll", userGetAll)
-
+router.get("/userGetAll", userGetAll)
 router.route("/user")
     .put(userEdit)
     .post(userNew)

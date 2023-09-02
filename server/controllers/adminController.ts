@@ -106,13 +106,12 @@ export const userGet = async (req: Request, res: Response) => {
 
 export const userGetAll = async (req: Request, res: Response) => {
     try {
-        const users = await userModel.find()
+        const users = await userModel.find({}, {password : 0})
         res.send({
             success: true,
             message: "users fetched",
             users
         })
-
     } catch (err) {
         console.log(err);
         res.send({
