@@ -67,7 +67,14 @@ const initialState: InitialState = {
 const adminSlice = createSlice({
     name: "admin",
     initialState,
-    reducers: {},
+    reducers: {
+        updateUser: (state, { payload }) => {
+            state.user = { ...state.user, [payload.name]: payload.value }
+        },
+        updateMentor: (state, { payload }) => {
+            state.mentor = { ...state.mentor, [payload.name]: payload.value }
+        }
+    },
     extraReducers(builder) {
         //get 
         builder.addCase(adminActions.adminGet.fulfilled, (state, { payload }) => {
@@ -118,6 +125,58 @@ const adminSlice = createSlice({
             toast.error((payload as { message: string })?.message)
         })
         // user get
+
+        // user edit
+        builder.addCase(adminActions.userEdit.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.error = false
+            toast.success((payload as { message: string })?.message)
+        })
+        builder.addCase(adminActions.userEdit.pending, (state) => {
+            state.loading = true
+            state.error = false
+        })
+        builder.addCase(adminActions.userEdit.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = true
+            toast.error((payload as { message: string })?.message)
+
+        })
+        // user edit
+
+        // mentor get all
+        builder.addCase(adminActions.mentorGetAll.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.error = false
+            state.mentors = payload?.mentors
+        })
+        builder.addCase(adminActions.mentorGetAll.pending, (state) => {
+            state.loading = true
+            state.error = false
+        })
+        builder.addCase(adminActions.mentorGetAll.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = true
+            toast.error((payload as { message: string })?.message)
+        })
+        // mentor get all
+
+        // mentor get
+        builder.addCase(adminActions.mentorGet.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.error = false
+            state.mentor = payload?.mentor
+        })
+        builder.addCase(adminActions.mentorGet.pending, (state) => {
+            state.loading = true
+            state.error = false
+        })
+        builder.addCase(adminActions.mentorGet.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = true
+            toast.error((payload as { message: string })?.message)
+        })
+        // mentor get
     },
 })
 

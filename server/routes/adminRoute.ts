@@ -5,6 +5,7 @@ import {
     userDelete, userEdit, userGet, userGetAll, userNew,
     mentorGet, mentorDelete, mentorEdit, mentorNew, mentorGetAll
 } from "../controllers/adminController"
+import { upload } from "../middlewares/uploadMiddleware"
 
 router.route("/")
     .get(adminGet)
@@ -15,7 +16,7 @@ router.route("/")
 // user routes
 router.get("/userGetAll", userGetAll)
 router.route("/user")
-    .put(userEdit)
+    .patch(upload, userEdit)
     .post(userNew)
 
 router.route("/user/:id")

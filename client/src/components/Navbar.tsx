@@ -20,10 +20,16 @@ const Navbar = () => {
             </div>
             <div className='flex items-center gap-2'>
                 {loggedIn ?
-                    <Link className='text-center bg-blue-500 text-white py-2 px-3 font-semibold font-sans rounded-lg' to={`/${type}`} >Dashboard</Link> :
+                    <Link
+                        className='text-center bg-blue-500 text-white py-2 px-3 font-semibold font-sans rounded-lg'
+                        to={`/${type}`} >Dashboard</Link> :
                     <>
-                        <Link className='text-center bg-white text-blue-500 py-2 px-3 font-semibold font-sans rounded-lg' to="/user/register">Register</Link>
-                        <Link className='text-center bg-blue-500 text-white py-2 px-3 font-semibold font-sans rounded-lg' to="/login">Login</Link>
+                        <Link
+                            className='text-center bg-white text-blue-500 py-2 px-3 font-semibold font-sans rounded-lg'
+                            to="/userRegister">Register</Link>
+                        <Link
+                            className='text-center bg-blue-500 text-white py-2 px-3 font-semibold font-sans rounded-lg'
+                            to="/login">Login</Link>
                     </>
                 }
             </div>

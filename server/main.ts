@@ -6,7 +6,6 @@ import cors from "cors"
 import dotenv from "dotenv"
 import morgan from "morgan"
 import adminAuthorizatoinMiddleware from "./middlewares/adminAuthorizationMiddleware"
-
 import connectDb from "./configs/connectDb"
 
 dotenv.config()

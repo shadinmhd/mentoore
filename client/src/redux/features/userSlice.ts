@@ -37,7 +37,11 @@ const initialState: InitialState = {
 const userSlice = createSlice({
     name: "user",
     initialState,
-    reducers: {},
+    reducers: {
+        updateUser : (state, action) => {
+            state.user = ({...state.user, [action.payload.name] : action.payload.value})
+        }
+    },
     extraReducers(builder) {
         //get
         builder.addCase(userActions.userGet.fulfilled, (state, { payload }) => {

@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 import userModel from "../models/userModel"
 import jwt from "jsonwebtoken"
+import getOtp from "../utils/getOtp";
+import otpModel from "../models/otpModel";
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { name, email, password } = req.body
+        const { email, name, password, } = req.body
 
         const searchUser = await userModel.findOne({ email })
         if (searchUser) {
@@ -15,16 +17,27 @@ export const register = async (req: Request, res: Response) => {
             return
         }
 
-        await new userModel({
-            name,
+        // const otp = getOtp(email)
+        // new otpModel({
+        //     otp,
+        //     email
+        // }).save()
+
+
+        const newUser = new userModel({
             email,
-            password
-        }).save()
+            name,
+            password,
+        })
+
+        await newUser.save()
 
         res.send({
             success: true,
-            message: "user created"
+            message: "user created",
+            user: newUser
         })
+        
     } catch (err) {
         console.log(err)
         res.send({
@@ -58,7 +71,7 @@ export const userGet = async (req: Request, res: Response) => {
 export const userUpdate = async (req: Request, res: Response) => {
     try {
         const { name, email } = req.body
-        const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string) as {id : string}
+        const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string) as { id: string }
         const oldUser = await userModel.findById(payload.id)
         if (!oldUser) {
             return res.send({

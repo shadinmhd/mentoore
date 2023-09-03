@@ -87,10 +87,10 @@ export const userGet = createAsyncThunk(
     async ({ id }: { id: string }, { rejectWithValue }) => {
         try {
             const { data } = await Api.get(`/admin/user/${id}`)
-            if(data.success){
+            if (data.success) {
                 return data
-            }else{
-                return rejectWithValue({message : data.message})
+            } else {
+                return rejectWithValue({ message: data.message })
             }
         } catch (err) {
             return rejectWithValue({ message: "something went wrong" })
@@ -98,7 +98,92 @@ export const userGet = createAsyncThunk(
     }
 )
 
+export const userEdit = createAsyncThunk(
+    'admin/userEdit',
+    async ({ editInfo }: { editInfo: FormData }, { rejectWithValue }) => {
+        try {
+            console.log(editInfo)
+            const { data } = await Api.patch("/admin/user", editInfo)
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "something went wrong" })
+        }
+    }
+)
+
+export const userDelete = createAsyncThunk(
+    "admim/useDelete",
+    async ({ id }: { id: string }, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.delete(`/admin/user/${id}`)
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "something went wrong" })
+        }
+    }
+)
+
+const mentorGetAll = createAsyncThunk(
+    "admin/mentorgetall",
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.get("/admin/mentor/getAll")
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "somethin went wrong" })
+        }
+    }
+)
+const mentorGet = createAsyncThunk(
+    "admin/mentorGet",
+    async ({ id }: { id: string }, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.get(`/admin/mentor/${id}`)
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "somethin went wrong" })
+        }
+    }
+)
+const mentorEdit = createAsyncThunk(
+    "admin/mentorEdit",
+    async (_, { rejectWithValue }) => {
+        try {
+
+        } catch (err) {
+            return rejectWithValue({ message: "somethin went wrong" })
+        }
+    }
+)
+const mentorDelete = createAsyncThunk(
+    "admin/mentorDelete",
+    async (_, { rejectWithValue }) => {
+        try {
+
+        } catch (err) {
+            return rejectWithValue({ message: "somethin went wrong" })
+        }
+    }
+)
+
 export default {
     adminLogin, adminRegister, adminGet, adminEdit,
-    userGetAll, userGet
+    userGetAll, userGet, userEdit, userDelete,
+    mentorGetAll, mentorGet, mentorEdit, mentorDelete
 }

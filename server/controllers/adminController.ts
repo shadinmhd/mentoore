@@ -106,7 +106,7 @@ export const userGet = async (req: Request, res: Response) => {
 
 export const userGetAll = async (req: Request, res: Response) => {
     try {
-        const users = await userModel.find({}, {password : 0})
+        const users = await userModel.find({}, { password: 0 })
         res.send({
             success: true,
             message: "users fetched",
@@ -156,8 +156,9 @@ export const userNew = async (req: Request, res: Response) => {
 
 export const userEdit = async (req: Request, res: Response) => {
     try {
-        const { _id, name, email, image } = req.body
-        const userSearch = await userModel.findOne({ _id })
+        const { id, name, email, image, status } = req.body
+        console.log(req.body)
+        const userSearch = await userModel.findOne({ _id: id })
         if (!userSearch) {
             return res.send({
                 success: false,
@@ -165,7 +166,8 @@ export const userEdit = async (req: Request, res: Response) => {
             })
         }
 
-        const newUser = await userModel.updateOne({ _id }, { name, email, image })
+        const newUser = await userModel.updateOne({ _id: id }, { name, email, image, status })
+        console.log(newUser)
         res.send({
             success: true,
             message: "user edited successfully",

@@ -7,7 +7,8 @@ interface loginType {
 }
 
 interface OtpType {
-    otp: string
+    otp: string,
+    id : string
 }
 
 const login = createAsyncThunk(
@@ -28,9 +29,9 @@ const login = createAsyncThunk(
 
 const verifyOtp = createAsyncThunk(
     "auth/verifyOtp",
-    async ({ otp }: OtpType, { rejectWithValue }) => {
+    async ({ otp , id }: OtpType, { rejectWithValue }) => {
         try {
-            const { data } = await Api.post("/otp", { otp })
+            const { data } = await Api.post("/otp", { otp , id })
             if (data.success) {
                 return data
             } else {

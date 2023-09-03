@@ -18,9 +18,16 @@ const userSchema = new mongoose.Schema({
     image: {
         type: String
     },
-    status : {
-        type : String,
-        default : "active"
+    status: {
+        type: String,
+        default: "active"
+    },
+    bookings: {
+        type: Array<String>,
+        default: []
+    },
+    wallet : {
+        type : String
     }
 })
 

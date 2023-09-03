@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "../../redux/store"
 import userActions from "../../redux/features/userActions"
 import authSlice from "../../redux/features/authSlice"
 import { useNavigate } from "react-router-dom"
+import userSlice from "../../redux/features/userSlice"
 
 
 const Settings = () => {
@@ -21,7 +22,7 @@ const Settings = () => {
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const data = new FormData
+        const data = new FormData()
         data.append("id", user._id)
         data.append("name", user.name)
         data.append("email", user.email)
@@ -38,7 +39,7 @@ const Settings = () => {
     }
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
-        user = { ...user, [name]: value }
+        dispatch(userSlice.actions.updateUser({ name, value }))
     }
 
     const logout = (e: React.MouseEvent<HTMLButtonElement>) => {

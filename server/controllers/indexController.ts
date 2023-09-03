@@ -3,8 +3,6 @@ import userModel from "../models/userModel";
 import mentorModel from "../models/mentorModel";
 import adminModel from "../models/adminModel"
 import jwt from "jsonwebtoken"
-import generateOtp from "../utils/generateOtp"
-import generateOTP from "../utils/generateOtp";
 
 export const login = async (req: Request, res: Response) => {
     try {
@@ -26,8 +24,6 @@ export const login = async (req: Request, res: Response) => {
                 message: "user doesn't exist",
             })
         }
-
-        generateOTP()
 
         const payload = {
             type,
