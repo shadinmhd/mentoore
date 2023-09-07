@@ -9,7 +9,8 @@ import { AppDispatch, RootState } from '../../redux/store'
 import { useDispatch, useSelector } from 'react-redux'
 import mentorActions from '../../redux/features/mentorActions'
 import { faBook, faDashboard, faGear, faMessage, faWallet } from '@fortawesome/free-solid-svg-icons'
-import {toast} from "react-toastify"
+import { toast } from "react-toastify"
+import Bookings from './Bookings'
 
 
 const MentorRouter = () => {
@@ -43,6 +44,7 @@ const MentorRouter = () => {
           <Route index element={<Navigate to="/mentor/dashboard" />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/messages' element={<Messages />} />
+          <Route path='/bookings' element={<Bookings />} />
           <Route path='/wallet' element={<Wallet />} />
           <Route path='/settings' element={<Settings />} />
         </Routes>

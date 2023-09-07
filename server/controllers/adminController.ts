@@ -295,15 +295,16 @@ export const mentorNew = async (req: Request, res: Response) => {
 
 export const mentorEdit = async (req: Request, res: Response) => {
     try {
-        const { _id, firstName, lastName, email, image } = req.body
-        if (!_id || !firstName || !lastName || !email || !image) {
+        const { id, firstName, lastName, email, image, status, bookings, description } = req.body
+        console.log(req.body)
+        if (!id || !firstName || !lastName || !email) {
             return res.send({
                 success: false,
                 message: "please fill all fields"
             })
         }
 
-        const searchMentor = await mentorModel.findOne({ _id })
+        const searchMentor = await mentorModel.findOne({ _id: id })
         if (!searchMentor)
             return res.send({
                 success: false,
@@ -311,7 +312,7 @@ export const mentorEdit = async (req: Request, res: Response) => {
             })
 
 
-        const newMentor = await mentorModel.updateOne({ _id }, { firstName, lastName, email, image })
+        const newMentor = await mentorModel.updateOne({ _id: id }, { firstName, lastName, email, image, status, description, bookings })
         res.send({
             success: true,
             message: "mentor edited successfully",
@@ -349,6 +350,18 @@ export const mentorDelete = async (req: Request, res: Response) => {
         res.send({
             success: false,
             message: "something went wrong"
+        })
+    }
+}
+
+export const getBookings = (req: Request, res : Response) => {
+    try {
+        
+    } catch (err) {
+        console.log(err)
+        res.send({
+            success : false,
+            message : "something went wrong"
         })
     }
 }

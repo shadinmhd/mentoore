@@ -5,6 +5,7 @@ import categoryActions from "../../redux/features/categoryActions";
 import { PuffLoader } from "react-spinners";
 import adminActions from "../../redux/features/adminActions";
 import { Link } from "react-router-dom";
+import Select from "../../components/form/Select";
 
 interface UserType {
   name: string,
@@ -17,6 +18,9 @@ interface UserType {
 const Users = () => {
   const [filteredUsers, setFIlteredUsers] = useState<Array<UserType>>([]);
   const [search, setSearch] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState("status")
+  const status = [{ name: "active" }, { name: "banned" }, { name: "deleted" }, { name: "pending" }]
+
 
   const loading = useSelector((state: RootState) => state.admin.loading);
   const users = useSelector((state: RootState) => state.admin.users);
@@ -30,11 +34,12 @@ const Users = () => {
 
   useEffect(() => {
     filterMentors(search);
-  }, [search, users]);
+  }, [search, users, selectedStatus]);
 
   const filterMentors = (searchText: string) => {
     const filtered = users.filter(
-      (user) => (searchText === "" || user.name.toLowerCase().includes(searchText.toLowerCase()))
+      (user) => (searchText === "" || user.name.toLowerCase().includes(searchText.toLowerCase())) &&
+        (selectedStatus == "status" || user.status == selectedStatus)
     );
     setFIlteredUsers(filtered);
   };
@@ -42,6 +47,10 @@ const Users = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStatus(e.target.value)
+  }
 
   return (
     <>
@@ -57,6 +66,14 @@ const Users = () => {
                 onChange={handleSearchChange}
                 placeholder="Search by name"
                 type="text"
+              />
+              <Select
+                className="w-44"
+                value={selectedStatus}
+                defaultValue={"status"}
+                onchange={handleStatusChange}
+                options={status}
+                name="status"
               />
             </div>
             <div>

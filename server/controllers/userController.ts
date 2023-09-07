@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import userModel from "../models/userModel"
 import jwt from "jsonwebtoken"
-import getOtp from "../utils/getOtp";
-import otpModel from "../models/otpModel";
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -17,19 +15,11 @@ export const register = async (req: Request, res: Response) => {
             return
         }
 
-        // const otp = getOtp(email)
-        // new otpModel({
-        //     otp,
-        //     email
-        // }).save()
-
-
         const newUser = new userModel({
             email,
             name,
             password,
         })
-
         await newUser.save()
 
         res.send({
@@ -37,7 +27,7 @@ export const register = async (req: Request, res: Response) => {
             message: "user created",
             user: newUser
         })
-        
+
     } catch (err) {
         console.log(err)
         res.send({
@@ -102,6 +92,18 @@ export const userUpdate = async (req: Request, res: Response) => {
 export const userDelete = async (req: Request, res: Response) => {
     try {
         const id = req.headers.authorization
+    } catch (err) {
+        console.log(err)
+        res.send({
+            success: false,
+            message: "something went wrong"
+        })
+    }
+}
+
+export const getBookings = async (req: Request, res: Response) => {
+    try {
+        
     } catch (err) {
         console.log(err)
         res.send({

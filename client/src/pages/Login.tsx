@@ -26,7 +26,7 @@ const Login = () => {
         if (response.payload.success) {
             navigate(`/${localStorage.getItem("type")}`)
             if (response.payload.type == "user")
-                dispatch(userActions.userGet())
+                (dispatch(userActions.userGet()))
             if (response.payload.type == "mentor")
                 dispatch(mentorActions.mentorGet())
             if (response.payload.type == "admin")
@@ -52,7 +52,7 @@ const Login = () => {
                             <Input name='password' placeholder='password' type='password' onchange={changeHander} />
                         </div>
                         <SubmitButton text="Login" />
-                        <Link to="/user/register"
+                        <Link to="/userRegister"
                             className='text-blue-500 underline'>
                             dont have an account?
                         </Link>

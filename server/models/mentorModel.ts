@@ -38,8 +38,12 @@ const mentorSchema = new mongoose.Schema({
         type: Array<String>,
         default: []
     },
-    wallet : {
-        type : String
+    wallet: {
+        type: String
+    },
+    verified: {
+        type: Boolean,
+        default: false
     }
 
 })

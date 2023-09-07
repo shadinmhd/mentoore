@@ -7,18 +7,14 @@ interface UserType {
     _id: string,
     image: string,
     email: string,
-    status: string
+    status: string,
+    verified : boolean | null | undefined
 }
 
 interface InitialState {
     loading: boolean,
     error: boolean,
-    user: {
-        name: string,
-        email: string,
-        _id: string,
-        image: string
-    },
+    user: UserType,
     users: UserType[]
 }
 
@@ -29,7 +25,9 @@ const initialState: InitialState = {
         _id: "",
         email: "",
         image: "",
-        name: ""
+        name: "",
+        status : "",
+        verified : undefined
     },
     users: []
 }
@@ -71,7 +69,7 @@ const userSlice = createSlice({
         builder.addCase(userActions.userRegister.rejected, (state, { payload }) => {
             state.loading = false
             state.error = true
-            toast.success((payload as { message: string }).message)
+            toast.error((payload as { message: string }).message)
         })
 
         // register

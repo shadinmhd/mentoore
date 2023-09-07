@@ -16,7 +16,7 @@ router.route("/")
 // user routes
 router.get("/userGetAll", userGetAll)
 router.route("/user")
-    .patch(upload, userEdit)
+    .put(upload, userEdit)
     .post(userNew)
 
 router.route("/user/:id")
@@ -28,7 +28,7 @@ router.route("/user/:id")
 router.get("mentor/getAll", mentorGetAll)
 
 router.route("/mentor")
-    .put(mentorEdit)
+    .put(upload, mentorEdit)
     .post(mentorNew)
 
 router.route("/mentor/:id")

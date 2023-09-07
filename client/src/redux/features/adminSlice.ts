@@ -17,7 +17,9 @@ interface MentorsType {
     image: string,
     email: string,
     category: string,
-    status: string
+    status: string,
+    description: string,
+    booking: string[]
 }
 
 interface InitialState {
@@ -60,7 +62,9 @@ const initialState: InitialState = {
         email: "",
         category: "",
         image: "",
-        status: ""
+        status: "",
+        description: "",
+        booking: []
     }
 }
 
@@ -177,6 +181,23 @@ const adminSlice = createSlice({
             toast.error((payload as { message: string })?.message)
         })
         // mentor get
+
+        // mentor edit
+        builder.addCase(adminActions.mentorEdit.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.error = false
+            toast.success((payload as { message: string })?.message)
+        })
+        builder.addCase(adminActions.mentorEdit.pending, (state) => {
+            state.loading = true
+            state.error = false
+        })
+        builder.addCase(adminActions.mentorEdit.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = true
+            toast.error((payload as { message: string })?.message)
+        })
+        // mentor edit
     },
 })
 

@@ -23,9 +23,10 @@ const UserRouter = () => {
             navigate("/")
             toast.error("not authorized")
         }
-        else
+        else {
             dispatch(userActions.userGet())
-    })
+        }
+    }, [dispatch])
 
     const buttons = [
         { to: "dashboard", icon: faDashboard, text: "dashboard" },

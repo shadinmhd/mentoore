@@ -9,6 +9,9 @@ router.route("/")
     .delete(userAuthorizationMiddleware, userDelete)
     .put(userAuthorizationMiddleware, upload, userUpdate)
 
+router.route("/booking")
+    .get(userAuthorizationMiddleware)
+
 router.post("/register", register)
 
 export default router

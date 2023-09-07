@@ -20,11 +20,13 @@ interface MentorsType {
 const Mentors = () => {
   const [filteredMentors, setFilteredMentors] = useState<Array<MentorsType>>([]);
   const [search, setSearch] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState<string>("category");
+  const [selectedStatus, setSelectedStatus] = useState<string>("status");
   const loading = useSelector((state: RootState) => state.mentor.loading);
   const mentors = useSelector((state: RootState) => state.mentor.mentors);
   const dispatch: AppDispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.category.categories);
+  const status = [{ name: "active" }, { name: "banned" }, { name: "deleted" }, { name: "pending" }]
 
   useEffect(() => {
     dispatch(categoryActions.categoryGet());
@@ -32,20 +34,25 @@ const Mentors = () => {
   }, []);
 
   useEffect(() => {
-    filterMentors(search, selectedCategory);
-  }, [search, selectedCategory, mentors]);
+    filterMentors(search, selectedCategory, selectedStatus);
+  }, [search, selectedCategory, mentors, selectedStatus]);
 
-  const filterMentors = (searchText: string, category: string) => {
+  const filterMentors = (searchText: string, category: string, status: string) => {
     const filtered = mentors.filter(
       (mentor) =>
         (searchText === "" || mentor.firstName.toLowerCase().includes(searchText.toLowerCase())) &&
-        (category === "All" || mentor.category === category)
+        (category === "category" || mentor.category === category) &&
+        (status === "status" || mentor.status === status)
     );
     setFilteredMentors(filtered);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+  };
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStatus(e.target.value);
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -70,9 +77,18 @@ const Mentors = () => {
               <Select
                 className="w-44"
                 value={selectedCategory}
+                defaultValue={"category"}
                 onchange={handleCategoryChange}
                 options={categories}
                 name="category"
+              />
+              <Select
+                className="w-44"
+                value={selectedStatus}
+                defaultValue={"status"}
+                onchange={handleStatusChange}
+                options={status}
+                name="status"
               />
             </div>
             <div>

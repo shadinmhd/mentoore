@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "../../redux/store"
 import mentorActions from "../../redux/features/mentorActions"
 import authSlice from "../../redux/features/authSlice"
 import { useNavigate } from "react-router-dom"
+import mentorSlice from "../../redux/features/mentorSlice"
 
 
 const Settings = () => {
@@ -16,7 +17,6 @@ const Settings = () => {
 
     useEffect(() => {
         dispatch(mentorActions.mentorGet())
-        console.log(localStorage.getItem("token"))
     }, [dispatch])
 
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,7 +39,7 @@ const Settings = () => {
     }
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
-        mentor = { ...mentor, [name]: value }
+        dispatch(mentorSlice.actions.updateMentor({ name, value }))
     }
 
     const logout = (e: React.MouseEvent<HTMLButtonElement>) => {

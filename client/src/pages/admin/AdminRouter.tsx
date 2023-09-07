@@ -15,6 +15,7 @@ import Users from './Users';
 import { toast } from "react-toastify";
 import User from './User';
 import Mentor from './Mentor';
+import "react-toastify"
 
 
 const AdminRouter = () => {

@@ -20,7 +20,7 @@ interface MentorsType {
 const Mentors = () => {
   const [filteredMentors, setFilteredMentors] = useState<Array<MentorsType>>([]);
   const [search, setSearch] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState<string>("category");
   const loading = useSelector((state: RootState) => state.mentor.loading);
   const mentors = useSelector((state: RootState) => state.mentor.mentors);
   const dispatch: AppDispatch = useDispatch();
@@ -39,7 +39,7 @@ const Mentors = () => {
     const filtered = mentors.filter(
       (mentor) =>
         (searchText === "" || mentor.firstName.toLowerCase().includes(searchText.toLowerCase())) &&
-        (category === "All" || mentor.category === category)
+        (category === "category" || mentor.category === category)
     );
     setFilteredMentors(filtered);
   };
@@ -71,6 +71,7 @@ const Mentors = () => {
               <Select
                 className="w-44"
                 value={selectedCategory}
+                defaultValue="category"
                 onchange={handleCategoryChange}
                 options={categories}
                 name="category"

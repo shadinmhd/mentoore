@@ -1,4 +1,3 @@
-import otpModel from "../models/otpModel";
 import nodemailer from "nodemailer"
 
 function generateOTP() {
@@ -13,7 +12,7 @@ function generateOTP() {
     return otp;
 }
 
-const getOtp = (email: string) => {
+const getOtp = (email: any) => {
     try {
         const otp = generateOTP()
 
@@ -58,8 +57,6 @@ const getOtp = (email: string) => {
         transporter.sendMail(mail, (err, inf) => {
             if (err) {
                 console.log(err)
-            } else {
-                console.log(inf)
             }
         })
 

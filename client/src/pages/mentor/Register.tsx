@@ -52,10 +52,9 @@ const MentorRegister = () => {
                     <Input name='email' placeholder='Email' type='text' onchange={changeHander} />
                     <Input name='password1' placeholder='password' type='password' onchange={changeHander} />
                     <Input name='password2' placeholder='confirm password' type='password' onchange={changeHander} />
-                    <span className='text-blue-600'>category</span>
                     {
                         categories &&
-                        <Select value='' className='' name='category' options={categories.map((e: CategoyType) => e.name != "All" ? e : { name: " " })} onchange={changeHander} />
+                        <Select defaultValue='category' value='' className='' name='category' options={categories.map((e: CategoyType) => e.name != "All" ? e : { name: " " })} onchange={changeHander} />
                     }
                 </div>
                 <SubmitButton text="Register" />

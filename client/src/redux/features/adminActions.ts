@@ -102,8 +102,7 @@ export const userEdit = createAsyncThunk(
     'admin/userEdit',
     async ({ editInfo }: { editInfo: FormData }, { rejectWithValue }) => {
         try {
-            console.log(editInfo)
-            const { data } = await Api.patch("/admin/user", editInfo)
+            const { data } = await Api.put("/admin/user", editInfo)
             if (data.success) {
                 return data
             } else {
@@ -161,11 +160,17 @@ const mentorGet = createAsyncThunk(
         }
     }
 )
+
 const mentorEdit = createAsyncThunk(
     "admin/mentorEdit",
-    async (_, { rejectWithValue }) => {
+    async ({ editInfo }: { editInfo: FormData }, { rejectWithValue }) => {
         try {
-
+            const { data } = await Api.put("/admin/mentor", editInfo)
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
         } catch (err) {
             return rejectWithValue({ message: "somethin went wrong" })
         }
