@@ -97,6 +97,22 @@ export const mentorGetAll = createAsyncThunk(
     }
 )
 
+export const getMentorDetails = createAsyncThunk(
+    "mentor/getMentorDetails",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.get(`/mentor/getDetails/${id}`)
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "something went wrong" })
+        }
+    }
+)
+
 export const getAllBookings = createAsyncThunk(
     "mentor/getAllBookings",
     async (_, { rejectWithValue }) => {
@@ -116,12 +132,11 @@ export const getAllBookings = createAsyncThunk(
 interface BookingData {
     date: string,
     startTime: string,
-    endTime: string
 }
 
 export const createBooking = createAsyncThunk(
     "mentor/createBooking",
-    async (bookingData: BookingData , { rejectWithValue }) => {
+    async (bookingData: BookingData, { rejectWithValue }) => {
         try {
             const { data } = await Api.post("mentor/bookings", bookingData)
             if (data.success)
@@ -135,6 +150,6 @@ export const createBooking = createAsyncThunk(
 )
 
 export default {
-    mentorLogin, mentorRegister, mentorGet, mentorEdit, mentorDelete, mentorGetAll,
+    mentorLogin, mentorRegister, mentorGet, mentorEdit, mentorDelete, mentorGetAll, getMentorDetails,
     getAllBookings, createBooking
 }

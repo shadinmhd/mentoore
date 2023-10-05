@@ -8,14 +8,28 @@ interface UserType {
     image: string,
     email: string,
     status: string,
-    verified : boolean | null | undefined
+    verified: boolean | null | undefined,
+    wallet: {
+        balance: Number
+        transactions: string[]
+    }
+}
+
+interface BookingType {
+    mentor: string,
+    user: string,
+    status: string,
+    date: string,
+    startTime: string,
+    endTime: string
 }
 
 interface InitialState {
     loading: boolean,
     error: boolean,
     user: UserType,
-    users: UserType[]
+    users: UserType[],
+    bookings: BookingType[]
 }
 
 const initialState: InitialState = {
@@ -26,18 +40,23 @@ const initialState: InitialState = {
         email: "",
         image: "",
         name: "",
-        status : "",
-        verified : undefined
+        status: "",
+        verified: undefined,
+        wallet: {
+            balance: 0,
+            transactions: []
+        }
     },
-    users: []
+    users: [],
+    bookings: []
 }
 
 const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        updateUser : (state, action) => {
-            state.user = ({...state.user, [action.payload.name] : action.payload.value})
+        updateUser: (state, action) => {
+            state.user = ({ ...state.user, [action.payload.name]: action.payload.value })
         }
     },
     extraReducers(builder) {
@@ -73,6 +92,24 @@ const userSlice = createSlice({
         })
 
         // register
+
+        // get All Bookings
+        builder.addCase(userActions.getAllBookings.fulfilled, (state, { payload }) => {
+            state.loading = false
+            state.error = false
+            state.bookings = payload.bookings
+            console.log(payload.bookings)
+        })
+        builder.addCase(userActions.getAllBookings.pending, (state) => {
+            state.loading = true
+            state.error = false
+        })
+        builder.addCase(userActions.getAllBookings.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = true
+            toast.error((payload as { message: string })?.message)
+        })
+        // get All Bookings
     },
 })
 

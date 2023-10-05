@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../redux/store";
 import { PuffLoader } from "react-spinners";
 import mentorActions from "../../redux/features/mentorActions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+import userActions from "../../redux/features/userActions";
 
 interface bookingType {
   mentor: string,
@@ -21,29 +20,28 @@ const Bookings = () => {
   const [filteredBookings, setFilteredBookings] = useState<Array<bookingType>>([]);
   const [search, setSearch] = useState<string>("");
   const [selectedStatus, setSelectedStatus] = useState<string>("status");
-  const [newBooking, setNewBookings] = useState(false)
 
-  const loading = useSelector((state: RootState) => state.mentor.loading);
-  const mentor = useSelector((state: RootState) => state.mentor.mentor);
+  const loading = useSelector((state: RootState) => state.user.loading);
+  const bookings = useSelector((state: RootState) => state.user.bookings);
 
   const dispatch: AppDispatch = useDispatch();
   const status = [{ name: "open" }, { name: "pending" }, { name: "booked" }, { name: "completed" }, { name: "cancelled" }]
 
 
   useEffect(() => {
-    dispatch(mentorActions.getAllBookings())
-  }, [dispatch, newBooking]);
+    dispatch(userActions.getAllBookings())
+  }, [dispatch]);
 
   useEffect(() => {
     filterBookings(selectedStatus);
-  }, [search, selectedStatus, mentor.bookings]);
+  }, [search, selectedStatus, bookings]);
 
   const filterBookings = (status: string) => {
-    const bookings = mentor.bookings.filter(
+    const filteredbookings = bookings.filter(
       (booking) =>
         (status === "status" || booking.status === status)
     );
-    setFilteredBookings(bookings);
+    setFilteredBookings(filteredbookings);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,14 +77,10 @@ const Bookings = () => {
                   options={status}
                   name="status"
                 />
-                <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.preventDefault(); setNewBookings(true) }} className="flex gap-2 items-center text-white bg-blue-600 rounded-lg px-2">
-                  add
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
               </div>
               <div className="flex flex-col gap-2 px-5">
                 <div className="text-blue-600 text-xl font-bold flex justify-between">
-                  <div className="w-full text-center">user</div>
+                  <div className="w-full text-center">mentor</div>
                   <div className="w-full text-center">date</div>
                   <div className="w-full text-center">starting time</div>
                   <div className="w-full text-center">endt time</div>
@@ -95,7 +89,7 @@ const Bookings = () => {
                 {
                   filteredBookings.map((booking, index) => (
                     <div className="flex justify-between text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg p-2 transition-all hover:scale-105 hover:p-3 cursor-pointer" key={index}>
-                      <div className={`${booking.user ? "" : "text-red-500"} w-full`}>{booking.user || "no booked yet"}</div>
+                      <div className="w-full">{booking.mentor}</div>
                       <div className="text-center w-full">{(moment(booking.date).format("MM-DD"))}</div>
                       <div className="text-center w-full">{(moment(booking.startTime).format("HH:mm:ss"))}</div>
                       <div className="text-center w-full">{(moment(booking.endTime).format("HH:mm:ss"))}</div>

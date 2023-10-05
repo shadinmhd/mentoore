@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import Select from "../components/form/Select";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store";
 import categoryActions from "../redux/features/categoryActions";
 import mentorActions from "../redux/features/mentorActions";
 import { PuffLoader } from "react-spinners";
+import { Link } from "react-router-dom";
 
 interface MentorsType {
   firstName: string;
@@ -21,10 +21,12 @@ const Mentors = () => {
   const [filteredMentors, setFilteredMentors] = useState<Array<MentorsType>>([]);
   const [search, setSearch] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("category");
+  const [selectedStatus, setSelectedStatus] = useState<string>("status");
   const loading = useSelector((state: RootState) => state.mentor.loading);
   const mentors = useSelector((state: RootState) => state.mentor.mentors);
   const dispatch: AppDispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.category.categories);
+  const status = [{ name: "active" }, { name: "banned" }, { name: "deleted" }, { name: "pending" }]
 
   useEffect(() => {
     dispatch(categoryActions.categoryGet());
@@ -32,14 +34,15 @@ const Mentors = () => {
   }, []);
 
   useEffect(() => {
-    filterMentors(search, selectedCategory);
-  }, [search, selectedCategory, mentors]);
+    filterMentors(search, selectedCategory, selectedStatus);
+  }, [search, selectedCategory, mentors, selectedStatus]);
 
-  const filterMentors = (searchText: string, category: string) => {
+  const filterMentors = (searchText: string, category: string, status: string) => {
     const filtered = mentors.filter(
       (mentor) =>
         (searchText === "" || mentor.firstName.toLowerCase().includes(searchText.toLowerCase())) &&
-        (category === "category" || mentor.category === category)
+        (category === "category" || mentor.category === category) &&
+        (status === "status" || mentor.status === status)
     );
     setFilteredMentors(filtered);
   };
@@ -48,14 +51,17 @@ const Mentors = () => {
     setSearch(e.target.value);
   };
 
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedStatus(e.target.value);
+  };
+
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
   };
 
   return (
     <>
-      <Navbar />
-      <div className={`h-screen w-screen px-10 pt-20 flex flex-col gap-5 ${loading && "items-center justify-center"}`}>
+      <div className={`h-screen w-full px-10 pt-20 flex flex-col gap-5 ${loading && "items-center justify-center"}`}>
         {loading ? (
           <PuffLoader color="#2563eb" />
         ) : (
@@ -71,19 +77,34 @@ const Mentors = () => {
               <Select
                 className="w-44"
                 value={selectedCategory}
-                defaultValue="category"
+                defaultValue={"category"}
                 onchange={handleCategoryChange}
                 options={categories}
                 name="category"
               />
+              <Select
+                className="w-44"
+                value={selectedStatus}
+                defaultValue={"status"}
+                onchange={handleStatusChange}
+                options={status}
+                name="status"
+              />
             </div>
             <div>
+              <div className="text-blue-600 text-xl font-bold flex justify-between">
+                <div>name</div>
+                <div>category</div>
+                <div>status</div>
+              </div>
+
               {filteredMentors.map((mentor, index) => (
-                <div className="text-blue-600 flex justify-between" key={index}>
+                <Link to={`/mentors/${mentor._id}`} className="text-blue-600 flex justify-between hover:bg-blue-500 hover:text-white rounded-lg p-2 transition-all hover:scale-105 hover:p-3" key={index}>
+
                   <div>{mentor.firstName}</div>
                   <div>{mentor.category}</div>
                   <div>{mentor.status}</div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>

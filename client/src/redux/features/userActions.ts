@@ -90,4 +90,20 @@ export const userDelete = createAsyncThunk(
     }
 )
 
-export default { userLogin, userRegister, userEdit, userDelete, userGet }
+export const getAllBookings = createAsyncThunk(
+    "user/getAllBookings",
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await Api.get("/user/getAllBookings")
+            if (data.success) {
+                return data
+            } else {
+                return rejectWithValue({ message: data.message })
+            }
+        } catch (err) {
+            return rejectWithValue({ message: "somethign went wrong" })
+        }
+    }
+)
+
+export default { userLogin, userRegister, userEdit, userDelete, userGet, getAllBookings }

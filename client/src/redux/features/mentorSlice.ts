@@ -8,7 +8,6 @@ interface bookingType {
     status: string,
     date: string,
     startTime: string,
-    endTime: string
 }
 
 interface MentorsType {
@@ -21,6 +20,10 @@ interface MentorsType {
     status: string,
     description: string,
     bookings: bookingType[]
+    wallet : {
+        balance : Number,
+        transactions : string[]
+    }
 }
 
 interface InitialState {
@@ -43,7 +46,11 @@ const initialState: InitialState = {
         category: "",
         status: "",
         description: "",
-        bookings: []
+        bookings: [],
+        wallet : {
+            balance : 0,
+            transactions : []
+        }
     },
     mentors: []
 }
@@ -80,7 +87,7 @@ const mentorSlice = createSlice({
             state.error = false
             state.mentors = payload?.mentors
         })
-        builder.addCase(mentorActions.mentorGetAll.pending, (state, { payload }) => {
+        builder.addCase(mentorActions.mentorGetAll.pending, (state) => {
             state.loading = true
             state.error = false
         })
@@ -107,6 +114,22 @@ const mentorSlice = createSlice({
             toast.error((payload as { message: string })?.message)
         })
         //edit
+
+        // get detalis
+        builder.addCase(mentorActions.getMentorDetails.fulfilled, (state) => {
+            state.loading = false
+            state.error = false
+        })
+        builder.addCase(mentorActions.getMentorDetails.pending, (state) => {
+            state.loading = true
+            state.error = false
+        })
+        builder.addCase(mentorActions.getMentorDetails.rejected, (state, { payload }) => {
+            state.loading = false
+            state.error = true
+            toast.error((payload as { message: string })?.message)
+        })
+        // get detalis
 
         //get all booking
         builder.addCase(mentorActions.getAllBookings.fulfilled, (state, { payload }) => {

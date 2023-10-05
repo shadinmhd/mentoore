@@ -2,7 +2,6 @@ import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import { ToastContainer } from 'react-toastify'
-import Mentors from './pages/Mentors'
 import Contact from './pages/Contact'
 import About from './pages/About'
 import UserRouter from './pages/user/UserRouter'
@@ -14,6 +13,8 @@ import authSlice from './redux/features/authSlice'
 import AdminRouter from './pages/admin/AdminRouter'
 import UserRegister from './pages/user/Register'
 import MentorRegister from './pages/mentor/Register'
+import Mentors from './pages/Mentors'
+import Mentor from './pages/Mentor'
 
 const App = () => {
   const dispatch: AppDispatch = useDispatch()
@@ -22,7 +23,7 @@ const App = () => {
   })
 
   return (
-    <>
+    <div className='font-sans font-semibold'>
       <ToastContainer />
       <Routes>
         <Route index element={<Home />} />
@@ -31,12 +32,13 @@ const App = () => {
         <Route path='/mentorRegister' element={<MentorRegister />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/about' element={<About />} />
+        <Route path='/mentors/:id' element={<Mentor />} />
         <Route path='/mentors' element={<Mentors />} />
         <Route path='/admin/*' element={<AdminRouter />} />
         <Route path='/mentor/*' element={<MentorRouter />} />
         <Route path='/user/*' element={<UserRouter />} />
       </Routes>
-    </>
+    </div >
   )
 }
 

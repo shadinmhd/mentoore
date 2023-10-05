@@ -2,8 +2,8 @@ import mongoose from "mongoose"
 
 const bookingSchema = new mongoose.Schema({
     mentor: {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
     },
     user: {
         type: String
@@ -18,10 +18,6 @@ const bookingSchema = new mongoose.Schema({
         required: true
     },
     startTime: {
-        type: String,
-        required: true
-    },
-    endTime: {
         type: String,
         required: true
     }

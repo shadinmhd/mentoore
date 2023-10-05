@@ -64,7 +64,7 @@ const Mentors = () => {
                             placeholder="Search by name"
                             type="text"
                         />
-                        <Select value="" className="w-44" onchange={changeHandler} options={categories} name="category" />
+                        <Select defaultValue="" value="" className="w-44" onchange={changeHandler} options={categories} name="category" />
                     </div>
                     <div>
                         {filteredMentors.map((e, i) => (

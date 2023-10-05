@@ -1,23 +1,25 @@
 import SubmitButton from "../../components/form/SubmitButton";
 import { useState } from "react";
-import moment from "moment";
-import { AppDispatch } from "../../redux/store";
-import { useDispatch } from "react-redux";
+import moment, { Moment } from "moment";
+import { AppDispatch, RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
 import mentorActions from "../../redux/features/mentorActions";
+import { toast } from "react-toastify";
 
 interface Props {
     setCreateBooking: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CreateBooking: React.FC<Props> = ({ setCreateBooking }) => {
-
+    const bookings = useSelector((state: RootState) => state.mentor.mentor.bookings)
     const [booking, setBooking] = useState({
         date: moment(),
         startTime: moment(),
-        endTime: moment()
     });
 
     const dispatch: AppDispatch = useDispatch()
+
+
 
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
@@ -28,20 +30,45 @@ const CreateBooking: React.FC<Props> = ({ setCreateBooking }) => {
         }));
     };
 
+    const checkTimeConflict = (): boolean => {
+        let result = true
+        for (let i = 0; i < bookings.length; i++) {
+            let diff = (Math.abs(moment(bookings[i].startTime).diff(booking.startTime, "minute")))
+            console.log(diff)
+            console.log(moment(bookings[i].date).isSame(booking.date, "date"))
+            if (moment(bookings[i].date).isSame(booking.date, "date")) {
+                if (diff < 65) {
+                    toast.error("please have 5min between sessions")
+                    result = false
+                    break
+                } else {
+                    result = true
+                }
+            } else {
+                result = true
+            }
+        }
+
+        return result
+    }
+
     const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const { date, startTime } = booking;
         if (!moment(date).isValid() || !moment(startTime).isValid()) {
             return;
         }
-        setBooking((prevBooking) => ({ ...prevBooking, endTime: startTime.clone().add(1, "hour") }))
         const formdata = {
             date: booking.date.format(),
             startTime: booking.startTime.format(),
-            endTime: booking.endTime.format()
         }
-        dispatch(mentorActions.createBooking(formdata))
-        setCreateBooking(false)
+        let conflict = checkTimeConflict()
+        if (conflict!) {
+            dispatch(mentorActions.createBooking(formdata))
+            setCreateBooking(false)
+        } else {
+            setCreateBooking(false)
+        }
     };
 
     const cancelHandler = () => {
@@ -60,6 +87,14 @@ const CreateBooking: React.FC<Props> = ({ setCreateBooking }) => {
                     <label htmlFor="startTime">start time: </label>
                     <input onChange={changeHandler} id="startTime" className="border-blue-600 border rounded-lg px-2 py-1 placeholder:text-blue-600 hover:outline-none" placeholder="start time" name="startTime" type="time" />
                 </div>
+                <p className="text-gray-500 font-regular text-sm flex flex-col">
+                    <span>
+                        Don't forget add some break between sessons.
+                    </span>
+                    <span>
+                        In this version of this app we only support 1 hour sessions.
+                    </span>
+                </p>
                 <SubmitButton text="create" />
                 <button className="" onClick={cancelHandler}>
                     cancel

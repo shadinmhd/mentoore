@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import userModel from "../models/userModel"
 import jwt from "jsonwebtoken"
+import bookingModel from "../models/bookingModel";
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -101,9 +102,27 @@ export const userDelete = async (req: Request, res: Response) => {
     }
 }
 
-export const getBookings = async (req: Request, res: Response) => {
+export const getBooking = async (req: Request, res: Response) => {
     try {
         
+    } catch (err) {
+        console.log(err)
+        res.send({
+            success: false,
+            message: "something went wrong"
+        })
+    }
+}
+
+export const getAllBooking = async (req: Request, res: Response) => {
+    try {
+        const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string)
+        const bookings = await bookingModel.find({user : (payload as {id : string})?.id})
+        res.send({
+            success : true,
+            message : "fetched bookings successfully",
+            bookings
+        })
     } catch (err) {
         console.log(err)
         res.send({

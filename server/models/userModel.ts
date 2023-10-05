@@ -1,5 +1,14 @@
 import mongoose from "mongoose"
 
+const walletSchema = new mongoose.Schema({
+    balance: {
+        type: Number,
+    },
+    transactions: {
+        type: [mongoose.Schema.Types.ObjectId],
+    }
+})
+
 const userSchema = new mongoose.Schema({
 
     name: {
@@ -27,7 +36,11 @@ const userSchema = new mongoose.Schema({
         default: []
     },
     wallet: {
-        type: String
+        type: walletSchema,
+        default : {
+            balance : 0,
+            transactions : []
+        }
     },
     verified: {
         type: Boolean,

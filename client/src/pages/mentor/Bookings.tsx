@@ -15,7 +15,6 @@ interface bookingType {
   status: string,
   date: string,
   startTime: string,
-  endTime: string
 }
 
 const Bookings = () => {
@@ -40,11 +39,13 @@ const Bookings = () => {
   }, [search, selectedStatus, mentor.bookings]);
 
   const filterBookings = (status: string) => {
-    const bookings = mentor.bookings.filter(
-      (booking) =>
-        (status === "status" || booking.status === status)
-    );
-    setFilteredBookings(bookings);
+    if (mentor.bookings) {
+      const bookings = mentor.bookings.filter(
+        (booking) =>
+          (status === "status" || booking.status === status)
+      );
+      setFilteredBookings(bookings);
+    }
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +73,7 @@ const Bookings = () => {
                   className="w-fit focus:outline-blue-700 border-[1.4px] rounded-md border-blue-500 px-2 py-1 text-blue-600"
                   value={search}
                   onChange={handleSearchChange}
-                  placeholder="Search by name"
+                  placeholder="Search by user"
                   type="text"
                 />
                 <Select
@@ -97,15 +98,21 @@ const Bookings = () => {
                   <div className="w-full text-center">status</div>
                 </div>
                 {
-                  filteredBookings.map((booking, index) => (
-                    <div className="{text-blue-600} flex justify-between text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg p-2 transition-all hover:scale-105 hover:p-3 cursor-pointer" key={index}>
-                      <div className={`${booking.user ? "" : "text-red-500"} w-full`}>{booking.user || "no booked yet"}</div>
-                      <div className="text-center w-full">{(moment(booking.date).format("MM-DD"))}</div>
-                      <div className="text-center w-full">{(moment(booking.startTime).format("HH:mm:ss"))}</div>
-                      <div className="text-center w-full">{(moment(booking.endTime).format("HH:mm:ss"))}</div>
-                      <div className="text-center w-full">{booking.status}</div>
+                  mentor.bookings ?
+
+                    filteredBookings.map((booking, index) => (
+                      <div className="{text-blue-600} flex justify-between text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg p-2 transition-all hover:scale-105 hover:p-3 cursor-pointer" key={index}>
+                        <div className={`${booking.user ? "" : "text-red-500"} w-full`}>{booking.user || "none"}</div>
+                        <div className="text-center w-full">{(moment(booking.date).format("MM/DD/YYYY"))}</div>
+                        <div className="text-center w-full">{(moment(booking.startTime).format("HH:mm:ss"))}</div>
+                        <div className="text-center w-full">{(moment(booking.startTime).clone().add(1, "hours").format("HH:mm"))}</div>
+                        <div className="text-center w-full">{booking.status}</div>
+                      </div>
+                    )) :
+                    <div>
+                      No bookings
                     </div>
-                  ))}
+                }
               </div>
             </div>
           </>

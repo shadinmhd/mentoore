@@ -1,5 +1,5 @@
 import express from "express"
-import { register, userGet, userDelete, userUpdate } from "../controllers/userController"
+import { register, userGet, userDelete, userUpdate, getAllBooking } from "../controllers/userController"
 import { upload } from "../middlewares/uploadMiddleware"
 import userAuthorizationMiddleware from "../middlewares/userAuthorizationMiddleware"
 const router = express.Router()
@@ -12,6 +12,7 @@ router.route("/")
 router.route("/booking")
     .get(userAuthorizationMiddleware)
 
+router.get("/getAllBookings", getAllBooking)
 router.post("/register", register)
 
 export default router
