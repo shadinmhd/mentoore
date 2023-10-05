@@ -4,7 +4,7 @@ import searchIcon from "../../assets/search.svg"
 
 const Hero = () => {
     return (
-        <div className="flex px-10 h-screen pt-20 w-screen overflow-x-hidden">
+        <div className="flex px-10 h-full pt-20 w-screen overflow-x-hidden">
             <div className="h-full gap-2 flex-col">
                 <div className="text-7xl font-semibold">
                     start <span className="text-blue-500">become</span>  your <br />

@@ -21,7 +21,7 @@ const adminAuthorizationMiddleware = async (req: Request, res: Response, next: N
             })
 
     } catch (err) {
-        console.log(err)
+        console.log("adminAUthorizationMiddlewate.ts",err)
         res.send({
             success: false,
             message: "please login first"

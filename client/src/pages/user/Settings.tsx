@@ -1,74 +1,99 @@
-import React, { useState, useEffect } from "react"
-import SubmitButton from "../../components/form/SubmitButton"
-import userIcon from "../../assets/user.png"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "../../redux/store"
-import userActions from "../../redux/features/userActions"
-import authSlice from "../../redux/features/authSlice"
-import { useNavigate } from "react-router-dom"
-import userSlice from "../../redux/features/userSlice"
+import ResetPassword from '@/components/shared/ResetPassword'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import Api from '@/services/Api'
+import { userSchema } from '@/validators/userType'
+import { faArrowLeft, faArrowRightFromBracket, faSave, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { z } from 'zod'
+
+type UserType = z.infer<typeof userSchema>
 
 
 const Settings = () => {
+  const [user, setUser] = useState<UserType>({
+    _id: "",
+    email: "",
+    image: "",
+    status: "",
+    name: ""
+  })
 
-    const dispatch: AppDispatch = useDispatch()
-    const [previewImage, setPreviewImage] = useState<File | null>()
-    let user = useSelector((state: RootState) => state.user?.user)
-    const navigate = useNavigate()
+  const navigate = useNavigate()
 
-    useEffect(() => {
-        dispatch(userActions.userGet())
-    }, [dispatch])
+  useEffect(() => {
+    (async () => {
+      const { data } = await Api.get(`/student`)
+      if (data.success) {
+        setUser(data.user)
+      } else {
+        toast.error(data.message)
+      }
+    })()
+  }, [])
 
-    const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const data = new FormData()
-        data.append("id", user._id)
-        data.append("name", user.name)
-        data.append("email", user.email)
-        if (previewImage) {
-            data.append("image", previewImage)
-        }
-        dispatch(userActions.userEdit(data))
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const { name, value } = e.target
+    let temp = {
+      ...user,
+      [name]: value
     }
-    const imageChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { files } = e.target
-        if (files) {
-            setPreviewImage(files[0])
-        }
-    }
-    const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
-        dispatch(userSlice.actions.updateUser({ name, value }))
-    }
+    console.log(temp)
+    setUser(temp)
+  }
 
-    const logout = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault()
-        dispatch(authSlice.actions.logout())
-        navigate("/login")
+  const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    console.log(user)
+    const { data } = await Api.put("/student", user)
+    if (data.success) {
+      toast.success("changes saved")
+    } else {
+      toast.error(data.message)
     }
+  }
 
-    return (
-        <div className="h-screen gap-5 flex-col flex items-center justify-center">
-            <label htmlFor="image" className="hover:cursor-pointer">
-                <img className="w-28 h-28 object-contain" src={previewImage && (URL.createObjectURL(previewImage)) || user?.image || userIcon} />
-            </label>
-            <form onSubmit={submitHandler} className="flex flex-col bg-white w-52 gap-2">
-                <input value={user && user?.name} name="name" placeholder="username" type="text" onChange={changeHandler} className='w-full focus:outline-blue-700 border-[1.4px] rounded-md border-blue-500 px-2 py-1 text-blue-600' />
-                <input value={user && user?.email} name="email" placeholder="email" type="email" onChange={changeHandler} className='w-full focus:outline-blue-700 border-[1.4px] rounded-md border-blue-500 px-2 py-1 text-blue-600' />
-                <input hidden id="image" name="image" placeholder="image" type="file" onChange={imageChangeHandler} />
-                <SubmitButton text="save" />
-            </form>
-            <div className="flex gap-5">
-                <button onClick={logout} className='hover:bg-white hover:text-red-600 hover:shadow-2xl transition-all w-full py-[7px] px-2 bg-red-600 rounded-lg text-white'>
-                    logout
-                </button>
-                <button className='hover:bg-white hover:text-red-600 hover:shadow-2xl transition-all w-full py-[7px] px-2 bg-red-600 rounded-lg text-white'>
-                    delete
-                </button>
-            </div>
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("type")
+    navigate("/")
+  }
+
+  return (
+    <div className='flex relative flex-col gap-8 items-start justify-center w-full p-10'>
+      <Avatar>
+        <AvatarImage src={user?.image} />
+        <AvatarFallback>
+          {user.name && user?.name[0].toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+      <div className='flex flex-col gap-4 w-full'>
+        <div className='flex w-full gap-5 items-center'>
+          <Label>name: </Label>
+          <Input onChange={changeHandler} className='w-auto' name='name' defaultValue={user?.name} />
         </div>
-    )
+        <div className='flex w-full gap-5 items-center'>
+          <Label>email: </Label>
+          <Input onChange={changeHandler} className='w-auto' name='email' defaultValue={user?.email} />
+        </div>
+        <div className='flex gap-2 flex-col'>
+            <ResetPassword />
+          <div className='flex items-center gap-3'>
+            <Button onClick={handleSave} className='flex gap-2 items-center justify-center text-center' >Save <FontAwesomeIcon icon={faSave} /> </Button>
+            <Button onClick={handleLogout} className='flex gap-2 items-center justify-center text-center' variant="destructive" >Logout <FontAwesomeIcon icon={faArrowRightFromBracket} /> </Button>
+          </div>
+        </div>
+      </div>
+    </div >
+  )
 }
 
 export default Settings

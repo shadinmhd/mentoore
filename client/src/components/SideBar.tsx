@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom"
 import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome"
+import { useEffect, useState } from "react"
 
 interface Props {
     to: string,
@@ -26,12 +27,13 @@ const SideBar: React.FC<{ buttons: Props[] }> = ({ buttons }) => {
 interface ButtonProps {
     to: string,
     icon: FontAwesomeIconProps['icon'],
-    text: string
+    text: string,
 }
 
 const Button: React.FC<ButtonProps> = ({ to, icon, text }) => {
+
     return (
-        <Link to={to} className="hover:text-white transition-all hover:scale-105 hover:translate-x-1 hover:bg-blue-600 rounded-lg py-2 px-4 font-semibold flex gap-2 items-center text-center" >
+        <Link to={to} className={`hover:text-white transition-all hover:scale-105 hover:translate-x-1 hover:bg-blue-600 rounded-lg py-2 px-4 font-semibold flex gap-2 items-center text-center`} >
             <FontAwesomeIcon icon={icon} />
             <span> {text}</span>
         </Link>

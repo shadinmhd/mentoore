@@ -1,125 +1,90 @@
-import React, { useEffect, useState } from "react";
-import Select from "../../components/form/Select";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../redux/store";
-import { PuffLoader } from "react-spinners";
-import mentorActions from "../../redux/features/mentorActions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import CreateBooking from "./CreateBooking";
-import moment from "moment";
+import { DeleteBooking } from "@/components/mentor/DeleteBookings"
+import NewBooking from "@/components/mentor/NewBookings"
+import CancelBooking from "@/components/mentor/CancelBooking"
+import { Input } from "@/components/ui/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import Api from "@/services/Api"
+import { bookingSchema } from "@/validators/bookingType"
+import moment from "moment"
+import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 
-interface bookingType {
-  mentor: string,
-  user: string | null | undefined,
-  status: string,
-  date: string,
-  startTime: string,
+type BookingType = {
+  _id: string;
+  mentor: string;
+  user: {
+    name : string
+  }
+  status: string;
+  date: string;
+  startTime: string;
 }
 
 const Bookings = () => {
-  const [filteredBookings, setFilteredBookings] = useState<Array<bookingType>>([]);
-  const [search, setSearch] = useState<string>("");
-  const [selectedStatus, setSelectedStatus] = useState<string>("status");
-  const [newBooking, setNewBookings] = useState(false)
 
-  const loading = useSelector((state: RootState) => state.mentor.loading);
-  const mentor = useSelector((state: RootState) => state.mentor.mentor);
-
-  const dispatch: AppDispatch = useDispatch();
-  const status = [{ name: "open" }, { name: "pending" }, { name: "booked" }, { name: "completed" }, { name: "cancelled" }]
+  const [bookings, setBookings] = useState<BookingType[]>([])
+  const [refresh, setRefresh] = useState(0)
 
 
   useEffect(() => {
-    dispatch(mentorActions.getAllBookings())
-  }, [dispatch, newBooking]);
-
-  useEffect(() => {
-    filterBookings(selectedStatus);
-  }, [search, selectedStatus, mentor.bookings]);
-
-  const filterBookings = (status: string) => {
-    if (mentor.bookings) {
-      const bookings = mentor.bookings.filter(
-        (booking) =>
-          (status === "status" || booking.status === status)
-      );
-      setFilteredBookings(bookings);
-    }
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedStatus(e.target.value);
-  };
+    (async () => {
+      const { data } = await Api.get("/slot/all")
+      if (data.success) {
+        console.log(data.bookings)
+        setBookings(data.bookings)
+      } else {
+        toast.error("couldn't get bookings")
+      }
+    })()
+  }, [refresh])
 
   return (
-    <>
 
-      <div className={`h-screen w-full px-10 pt-20 flex flex-col gap-5 ${loading && "items-center justify-center"}`}>
-        {loading ? (
-          <PuffLoader color="#2563eb" />
-        ) : (
-          <>
-            {
-              newBooking && <CreateBooking setCreateBooking={setNewBookings} />
-            }
-            <div className="flex flex-col gap-5">
-              <div className="flex gap-2">
-                <input
-                  className="w-fit focus:outline-blue-700 border-[1.4px] rounded-md border-blue-500 px-2 py-1 text-blue-600"
-                  value={search}
-                  onChange={handleSearchChange}
-                  placeholder="Search by user"
-                  type="text"
-                />
-                <Select
-                  className="w-44"
-                  value={selectedStatus}
-                  defaultValue="status"
-                  onchange={handleStatusChange}
-                  options={status}
-                  name="status"
-                />
-                <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.preventDefault(); setNewBookings(true) }} className="flex gap-2 items-center text-white bg-blue-600 rounded-lg px-2">
-                  add
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
-              </div>
-              <div className="flex flex-col gap-2 px-5">
-                <div className="text-blue-600 text-xl font-bold flex justify-between">
-                  <div className="w-full text-center">user</div>
-                  <div className="w-full text-center">date</div>
-                  <div className="w-full text-center">starting time</div>
-                  <div className="w-full text-center">endt time</div>
-                  <div className="w-full text-center">status</div>
-                </div>
-                {
-                  mentor.bookings ?
-
-                    filteredBookings.map((booking, index) => (
-                      <div className="{text-blue-600} flex justify-between text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg p-2 transition-all hover:scale-105 hover:p-3 cursor-pointer" key={index}>
-                        <div className={`${booking.user ? "" : "text-red-500"} w-full`}>{booking.user || "none"}</div>
-                        <div className="text-center w-full">{(moment(booking.date).format("MM/DD/YYYY"))}</div>
-                        <div className="text-center w-full">{(moment(booking.startTime).format("HH:mm:ss"))}</div>
-                        <div className="text-center w-full">{(moment(booking.startTime).clone().add(1, "hours").format("HH:mm"))}</div>
-                        <div className="text-center w-full">{booking.status}</div>
-                      </div>
-                    )) :
-                    <div>
-                      No bookings
-                    </div>
-                }
-              </div>
-            </div>
-          </>
-        )}
+    <div className="flex flex-col p-2 w-full">
+      <div className="flex gap-2">
+        <Input placeholder="search" />
+        <NewBooking refresh={setRefresh} />
       </div>
-    </>
-  );
-};
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              date
+            </TableHead>
+            <TableHead>
+              user
+            </TableHead>
+            <TableHead>
+              start time
+            </TableHead>
+            <TableHead>
+              status
+            </TableHead>
+            <TableHead>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody className="w-full">
+          {bookings.map((e, i) => (
+            <TableRow className="w-full" key={i}>
+              <TableCell>{moment(e.date).format("DD/MM/YYYY")} </TableCell>
+              <TableCell>{e.user && e.user.name || "not booked yet"} </TableCell>
+              <TableCell>{moment(e.startTime).format("HH:mm")} </TableCell>
+              <TableCell>{e.status}</TableCell>
+              <TableCell className="flex gap-1">
+                {
+                  e.status == "booked" &&
+                  <CancelBooking refresh={setRefresh} id={e._id} />
+                }
+                <DeleteBooking id={e._id} refresh={setRefresh} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
 
-export default Bookings;
+  )
+}
+
+export default Bookings

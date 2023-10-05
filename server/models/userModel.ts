@@ -1,16 +1,38 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
+import walletSchema from "./walletSchema"
 
-const walletSchema = new mongoose.Schema({
-    balance: {
-        type: Number,
+interface IUser {
+    name: string,
+    email: string,
+    password: string,
+    type: string,
+    image: string,
+    wallet: {
+        balance: number,
     },
-    transactions: {
-        type: [mongoose.Schema.Types.ObjectId],
-    }
-})
+    status: string,
+}
 
-const userSchema = new mongoose.Schema({
+interface IStudent extends IUser {
+    bookings: {
+        mentor: string,
+        user: string,
+        status: string,
+        date: string,
+        startTime: string
+    }[]
+}
 
+interface IMentor extends IUser {
+    description: string,
+    category: string
+}
+
+interface IAdmin extends IUser {
+   idAdmin : boolean
+}
+
+const userSchema = new mongoose.Schema<IUser>({
     name: {
         type: String,
         required: true
@@ -24,28 +46,42 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    image: {
-        type: String
+    type: String,
+    image: String,
+    wallet: {
+        type: walletSchema,
+        default: {
+            balance: 0
+        }
     },
     status: {
         type: String,
         default: "active"
     },
-    bookings: {
-        type: Array<String>,
-        default: []
-    },
-    wallet: {
-        type: walletSchema,
-        default : {
-            balance : 0,
-            transactions : []
-        }
-    },
-    verified: {
-        type: Boolean,
-        default: false
-    }
-})
 
-export default mongoose.model("user", userSchema)
+}, { discriminatorKey: "type" });
+
+const studentSchema = new mongoose.Schema<IStudent>({
+    name: String,
+});
+
+const mentorSchema = new mongoose.Schema<IMentor>({
+    description: {
+        type: String
+    },
+    category: {
+        type: String
+    }
+});
+
+const adminSchema = new mongoose.Schema<IAdmin>({
+    idAdmin: {
+        type: Boolean,
+        required: true
+    }
+});
+
+export const User = mongoose.model<IUser>("User", userSchema);
+export const Student = User.discriminator("Student", studentSchema);
+export const Mentor = User.discriminator("Mentor", mentorSchema);
+export const Admin = User.discriminator("Admin", adminSchema);

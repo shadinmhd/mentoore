@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import userModel from "../models/userModel";
-import mentorModel from "../models/mentorModel";
-import adminModel from "../models/adminModel"
+import { User } from "../models/userModel";
 import jwt from "jsonwebtoken"
 
 export const login = async (req: Request, res: Response) => {
@@ -13,10 +11,8 @@ export const login = async (req: Request, res: Response) => {
                 message: "please enter all fields"
             })
         }
-        let type
-        let userSearch = (type = "user", await userModel.findOne({ email }, { _id: 1 })) ||
-            (type = "mentor", await mentorModel.findOne({ email: email }, { _id: 1 })) ||
-            (type = "admin", await adminModel.findOne({ email: email }, { _id: 1 }))
+
+        let userSearch = await User.findOne({ email })
 
         if (!userSearch) {
             return res.send({
@@ -26,7 +22,7 @@ export const login = async (req: Request, res: Response) => {
         }
 
         const payload = {
-            type,
+            type: userSearch.type.toLocaleLowerCase(),
             id: userSearch._id.toString()
         }
         const token = jwt.sign(payload, process.env.jwt as string)
@@ -34,8 +30,8 @@ export const login = async (req: Request, res: Response) => {
         res.send({
             success: true,
             message: "otp has been send",
-            type,
-            token
+            token,
+            type: userSearch.type.toLocaleLowerCase()
         })
     } catch (err) {
         console.log(err)
@@ -44,4 +40,4 @@ export const login = async (req: Request, res: Response) => {
             message: "somethign went wrong"
         })
     }
-}   
+}

@@ -1,113 +1,106 @@
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
-import { AppDispatch, RootState } from "../redux/store"
-import mentorActions from "../redux/features/mentorActions"
-import userIcon from "../assets/user.png"
-import { PuffLoader } from "react-spinners"
+import Navbar from "@/components/Navbar"
+import BookSlot from "@/components/shared/BookSlot"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import Api from "@/services/Api"
+import { bookingSchema } from "@/validators/bookingType"
+import { mentorSchema } from "@/validators/mentorType"
 import moment from "moment"
-import Checkout from "./Checkout"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { toast } from "react-toastify"
+import { z } from "zod"
 
-
-interface bookingType {
-   _id : string,
-   mentor: string,
-   user: string | null | undefined,
-   status: string,
-   date: string,
-   startTime: string,
-}
-
-interface MentorsType {
-   firstName: string,
-   lastName: string,
-   _id: string,
-   image: string,
-   email: string,
-   category: string,
-   status: string,
-   description: string,
-   bookings: bookingType[]
-}
+type MentorType = z.infer<typeof mentorSchema>
+type BookingType = z.Indices<typeof bookingSchema>
 
 const Mentor = () => {
+  const [mentor, setMentor] = useState<MentorType>({
+    _id: "",
+    name: "",
+    category: "",
+    description: "",
+    email: "",
+    image: "",
+    status: "",
+    bookings: [],
+  })
+  const [bookings, setBookings] = useState<BookingType[]>([])
+  const [refresh, setRefresh] = useState(0)
+  const { id } = useParams()
 
-   const [mentor, setMentor] = useState<MentorsType>({
-      _id: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      category: "",
-      image: "",
-      description: "",
-      status: "",
-      bookings: [],
-   })
+  useEffect(() => {
+    (async () => {
+      const { data } = await Api.get(`/mentor/getDetails/${id}`)
+      if (data.success) {
+        setMentor(data.mentor)
+        console.log(data.bookings)
+        setBookings(data.bookings)
+      } else {
+        toast.error(data.message)
+      }
+    })()
+  }, [refresh])
 
-   let selectedSlot: string = mentor.bookings[0]._id
-   const loading = useSelector((state: RootState) => state.mentor.loading)
-   const params = useParams<{ id: string }>()
-   const dispatch: AppDispatch = useDispatch()
-
-   useEffect(() => {
-      (async () => {
-         const { payload } = await dispatch(mentorActions.getMentorDetails(params.id!))
-         if (payload.success)
-            setMentor(payload.mentor)
-      })()
-   }, [dispatch])
-
-   return (
-      <>
-         <Checkout id={selectedSlot} />
-         <div className="flex h-screen items-center mx-10 text-blue-600">
-            {
-               loading ?
-                  <PuffLoader />
-                  :
-                  <div className="flex flex-col gap-5">
-                     <img
-                        className="w-64"
-                        src={mentor.image || userIcon} alt="icon" />
-                     <div className="flex flex-col">
-                        <h1 className="text-xl">{mentor.firstName.split("").map((e, i) => i == 0 ? e.toUpperCase() : e).join("")} {mentor.lastName}</h1>
-                        <p>{mentor.description}</p>
-                        <p className="bg-blue-600 text-white w-max rounded-md px-2 py-1">{mentor.category}</p>
-                        <div className="mt-5 flex flex-col gap-2">
-                           <p className="text-xl">Open slots</p>
-                           <div className="flex flex-col w-full items-center gap-2  text-white">
-                              <div className="flex w-full items-center px-2 py-1 text-blue-600 justify-between">
-                                 <p>
-                                    Day
-                                 </p>
-                                 <p>
-                                    Time
-                                 </p>
-                                 <div></div>
-                              </div>
-                              {
-                                 mentor.bookings.map((e, i) =>
-                                    <div key={i} className="flex w-full items-center px-3 py-1 bg-blue-600 justify-between">
-                                       <p>
-                                          {moment(e.date).format("DD/MM/YY")}
-                                       </p>
-                                       <p>
-                                          {moment(e.startTime).format("HH:mm")}
-                                       </p>
-                                       <button className="rounded-lg bg-white text-blue-600 px-2 py-1">
-                                          Book
-                                       </button>
-                                    </div>
-                                 )
-                              }
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-            }
-         </div>
-      </>
-   )
+  console.log(id)
+  return (
+    <div className="pt-16 flex items-center justify-center h-screen w-full">
+      <Navbar />
+      <div className="flex text-blue-600 flex-col gap-5 items-center justify-center">
+        <Avatar className="text-black">
+          <AvatarImage src={mentor.image} ></AvatarImage>
+          <AvatarFallback>
+            {mentor.name && mentor.name[0].toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <p className="text-2xl font-semibold flex gap-2 text-blue-600">
+          <span>
+            {mentor.name.split("").map((e, i) => i == 0 ? e.toUpperCase() : e)}
+          </span>
+        </p>
+        <p className="flex gap-2">
+          <span>
+            category:
+          </span>
+          <span className="bg-blue-600 text-white py-1 px-2 rounded-lg">
+            {mentor.category}
+          </span >
+        </p>
+        <p className="text-md font-semibold content">
+          {mentor.description}
+        </p>
+        {
+          bookings.length != 0 ?
+            <Table className="border w-full rounded-lg">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>date</TableHead>
+                  <TableHead>time</TableHead>
+                  <TableHead></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {
+                  bookings.map((e, i) => e.status == "open" && (
+                    <TableRow key={i}>
+                      <TableCell>{moment(e.date).format("DD/MM/YYYY")}</TableCell>
+                      <TableCell>{moment(e.startTime).format("HH:mm")}</TableCell>
+                      <TableCell>
+                        <BookSlot refresh={setRefresh} date={e.date} id={e._id} startTime={e.startTime} />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                }
+              </TableBody>
+            </Table >
+            :
+            <span className="text-red-600">
+              no slots available
+            </span>
+        }
+      </div>
+    </div>
+  )
 }
 
 export default Mentor

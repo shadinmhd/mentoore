@@ -1,14 +1,13 @@
 import { Request, Response } from "express"
-import userModel from "../models/userModel"
-import mentorModel from "../models/mentorModel"
-import bookingModel from "../models/bookingModel"
-import jwt, { JwtPayload } from "jsonwebtoken"
+import { User, Mentor } from "../models/userModel"
+import bookingModel from "../models/slotModel"
+import jwt from "jsonwebtoken"
 
-const registerMentor = async (req: Request, res: Response) => {
+export const registerMentor = async (req: Request, res: Response) => {
     try {
-        const { firstName, lastName, email, password, category } = req.body
+        const { name, email, password, category } = req.body
 
-        const searcMentor = (await mentorModel.findOne({ email })) || (await userModel.findOne({ email }))
+        const searcMentor = await User.findOne({ email })
         if (searcMentor) {
             res.send({
                 success: false,
@@ -17,17 +16,16 @@ const registerMentor = async (req: Request, res: Response) => {
             return
         }
 
-        await new mentorModel({
-            firstName,
-            lastName,
+        await new Mentor({
             email,
+            name,
             password,
             category
         }).save()
 
         res.send({
             success: true,
-            message: "user created"
+            message: "account created"
         })
     } catch (err) {
         console.log(err)
@@ -38,9 +36,19 @@ const registerMentor = async (req: Request, res: Response) => {
     }
 }
 
-const getAllMentors = async (req: Request, res: Response) => {
+export const getAllMentors = async (req: Request, res: Response) => {
     try {
-        const mentors = await mentorModel.find({}, { password: 0 })
+        const { category, name } = req.query
+
+        let query: any = {}
+        if (category) {
+            query.category = category
+        }
+        if (name) {
+            query.firstName = name
+        }
+        const mentors = await Mentor.find(query, { password: 0 })
+        console.log(req.query)
         res.send({
             success: true,
             message: "fetched all mentors",
@@ -55,18 +63,21 @@ const getAllMentors = async (req: Request, res: Response) => {
     }
 }
 
-const getMentorDetails = async (req: Request, res: Response) => {
+export const getMentorDetails = async (req: Request, res: Response) => {
     try {
         const { id } = req.params
+        console.log(id)
         if (!id) {
             return res.send({
                 success: false,
                 message: "no id provided"
             })
         }
-        const searchedMentor = await mentorModel.findById(id).populate("bookings")
 
-        if (!searchedMentor){
+        const searchedMentor = await Mentor.findOne({ _id: id })
+        const bookings = await bookingModel.find({ mentor: id })
+
+        if (!searchedMentor) {
             return res.send({
                 success: false,
                 message: "no user found"
@@ -76,7 +87,8 @@ const getMentorDetails = async (req: Request, res: Response) => {
         res.send({
             success: true,
             message: "fetched user details",
-            mentor: searchedMentor
+            mentor: searchedMentor,
+            bookings
         })
 
     } catch (err) {
@@ -88,10 +100,10 @@ const getMentorDetails = async (req: Request, res: Response) => {
     }
 }
 
-const getMentor = async (req: Request, res: Response) => {
+export const getMentor = async (req: Request, res: Response) => {
     try {
         const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string) as { id: string }
-        const mentor = await mentorModel.findOne({ _id: payload.id }, { password: 0 })
+        const mentor = await Mentor.findOne({ _id: payload.id }, { password: 0 })
         console.log(payload?.id)
         res.send({
             success: true,
@@ -108,10 +120,10 @@ const getMentor = async (req: Request, res: Response) => {
 
 }
 
-const updateMentor = async (req: Request, res: Response) => {
+export const updateMentor = async (req: Request, res: Response) => {
     try {
-        const { id, firstName, lastName, email } = req.body
-        const oldUser = await mentorModel.findById(id)
+        const { _id, name, email, category, description } = req.body
+        const oldUser = await Mentor.findById(_id)
         if (!oldUser) {
             return res.send({
                 success: false,
@@ -121,11 +133,11 @@ const updateMentor = async (req: Request, res: Response) => {
 
         let image = oldUser.image
         if (req.file) {
-            image = `http://localhost:8000/public/mentor/${firstName}.${req.file.filename.split(".")[1]}`
-            console.log(firstName)
+            image = `http://localhost:8000/public/mentor/${name}.${req.file.filename.split(".")[1]}`
+            console.log(name)
         }
 
-        const updatededUser = await mentorModel.findOneAndUpdate({ _id: id }, { lastName, firstName, email, image })
+        const updatededUser = await Mentor.updateOne({ _id }, { name, email, image, category, description })
         res.send({
             success: true,
             message: "profile updated",
@@ -140,7 +152,7 @@ const updateMentor = async (req: Request, res: Response) => {
     }
 }
 
-const deleteMentor = async (req: Request, res: Response) => {
+export const deleteMentor = async (req: Request, res: Response) => {
     try {
 
     } catch (err) {
@@ -150,66 +162,4 @@ const deleteMentor = async (req: Request, res: Response) => {
             message: "something went wrong"
         })
     }
-}
-
-const getAllBookings = async (req: Request, res: Response) => {
-    try {
-        const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string)
-        const id = (payload as { id: string })?.id as string
-        const mentor = await mentorModel.findOne({ _id: id })
-        if (!mentor) {
-            return res.send({
-                success: false,
-                message: "invalid user"
-            })
-        }
-
-        const bookings = await bookingModel.find({ mentor: id })
-        res.send({
-            success: true,
-            message: "bookings fetched",
-            bookings
-        })
-
-    } catch (err) {
-        console.log(err)
-        res.send({
-            success: false,
-            message: "something went wrong"
-        })
-    }
-}
-
-const createBooking = async (req: Request, res: Response) => {
-    try {
-        const { date, startTime, endTime } = req.body
-        const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string)
-        const id = (payload as { id: string })?.id
-
-        new bookingModel({
-            mentor: id,
-            date,
-            startTime,
-            endTime
-        }).save()
-        const bookings = await bookingModel.find({ mentor: id })
-        const bookingids = bookings.map((e) => e._id)
-        const mentorSearch = await mentorModel.findByIdAndUpdate(id, { $set: { bookings: bookingids } })
-
-        res.send({
-            success: true,
-            message: "got"
-        })
-    } catch (err) {
-        console.log(err)
-        res.send({
-            success: false,
-            message: "something went wrong"
-        })
-    }
-}
-
-export {
-    registerMentor, getAllMentors, getMentor, updateMentor, deleteMentor, getMentorDetails,
-    getAllBookings, createBooking
 }
