@@ -4,16 +4,16 @@ import CancelBooking from "@/components/mentor/CancelBooking"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Api from "@/services/Api"
-import { bookingSchema } from "@/validators/bookingType"
 import moment from "moment"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import SessionComplete from "@/components/mentor/SessionComplete"
 
 type BookingType = {
   _id: string;
   mentor: string;
   user: {
-    name : string
+    name: string
   }
   status: string;
   date: string;
@@ -41,11 +41,10 @@ const Bookings = () => {
   return (
 
     <div className="flex flex-col p-2 w-full">
-      <div className="flex gap-2">
-        <Input placeholder="search" />
-        <NewBooking refresh={setRefresh} />
+      <div className="text-xl sm:text-2xl">
+        Bookings
       </div>
-      <Table>
+      <Table className="text-xs sm:text-base">
         <TableHeader>
           <TableRow>
             <TableHead>
@@ -61,6 +60,10 @@ const Bookings = () => {
               status
             </TableHead>
             <TableHead>
+              {
+
+                <NewBooking refresh={setRefresh} />
+              }
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -73,10 +76,14 @@ const Bookings = () => {
               <TableCell>{e.status}</TableCell>
               <TableCell className="flex gap-1">
                 {
-                  e.status == "booked" &&
-                  <CancelBooking refresh={setRefresh} id={e._id} />
+                  e.status == "booked" ?
+                    <>
+                      <CancelBooking refresh={setRefresh} id={e._id} />
+                      <SessionComplete refresh={setRefresh} id={e._id} />
+                    </>
+                    :
+                    <DeleteBooking id={e._id} refresh={setRefresh} />
                 }
-                <DeleteBooking id={e._id} refresh={setRefresh} />
               </TableCell>
             </TableRow>
           ))}

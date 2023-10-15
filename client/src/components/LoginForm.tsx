@@ -27,10 +27,10 @@ const LoginForm = () => {
     const onSubmit = async (logindata: Input) => {
         const {data} = await Api.post("/auth/login", logindata)
         if(data.success){
-            toast.success("logged in successfully")
             localStorage.setItem("token", data.token)
             localStorage.setItem("type", data.type)
-            navigate(`/${data.type}`)
+            navigate(`/`)
+            window.location.reload()
         }else{
             toast.error(data.message)
             form.resetField('email')

@@ -1,10 +1,19 @@
 # Mentoore
 
-### pending works
+## pending works
 
--[ ] first
+## high priority
+- [ ] dashboard
+- [ ] otp
+- [x] chat
+- [ ] video call
+- [ ] home page
+- [ ] cleanup
+- [ ] check time collition of slots
 
--[x] first
+## medium priority
+- [ ] authorization
+- [ ] user status
 
-- [ ] idk
-- [x] idk
+### Low priority 
+- [ ] dockerize

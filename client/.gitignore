@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+localhost+1.pem
+localhost+1-key.pem

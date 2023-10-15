@@ -33,35 +33,40 @@ const Bookings = () => {
   }, [refresh])
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>mentor</TableHead>
-          <TableHead>date</TableHead>
-          <TableHead>time</TableHead>
-          <TableHead>status</TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {
-          bookings.map((e, i) => (
-            <TableRow key={i}>
-              <TableCell>{e.mentor.name}</TableCell>
-              <TableCell>{moment(e.date).format("DD/MM/YYYY")}</TableCell>
-              <TableCell>{moment(e.startTime).format("HH:mm")}</TableCell>
-              <TableCell>{e.status}</TableCell>
-              <TableCell>
-                {
-                  e.status != "cancelled" &&
-                  <CancelBooking refresh={setRefresh} id={e._id} />
-                }
-              </TableCell>
-            </TableRow>
-          ))
-        }
-      </TableBody>
-    </Table>
+    <div className="flex flex-col items-center justify-center w-full">
+      {/* <div className="text-xl font-semibold"> */}
+        {/* Bookings */}
+      {/* </div> */}
+      <Table className="text-xs sm:text-base w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead>mentor</TableHead>
+            <TableHead>date</TableHead>
+            <TableHead>time</TableHead>
+            <TableHead>status</TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {
+            bookings.map((e, i) => (
+              <TableRow key={i}>
+                <TableCell>{e.mentor.name}</TableCell>
+                <TableCell>{moment(e.date).format("DD/MM/YYYY")}</TableCell>
+                <TableCell>{moment(e.startTime).format("HH:mm")}</TableCell>
+                <TableCell>{e.status}</TableCell>
+                <TableCell>
+                  {
+                    e.status != "cancelled" &&
+                    <CancelBooking refresh={setRefresh} id={e._id} />
+                  }
+                </TableCell>
+              </TableRow>
+            ))
+          }
+        </TableBody>
+      </Table>
+    </div>
   )
 }
 

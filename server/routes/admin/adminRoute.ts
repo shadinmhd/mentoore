@@ -3,14 +3,15 @@ const router = express.Router()
 import { adminGet, adminEdit } from "../../controllers/admin/adminController"
 import studentRoute from "./studentRoute"
 import mentorRoute from "./mentorRoute"
+import adminAuthorizationMiddleware from "../../middlewares/adminAuthorizationMiddleware"
 
 router.route("/")
-    .get(adminGet)
-    .put(adminEdit)
+    .get(adminAuthorizationMiddleware,adminGet)
+    .put(adminAuthorizationMiddleware,adminEdit)
     .delete()
     .post()
 
-router.use("/student", studentRoute)
-router.use("/mentor", mentorRoute)
+router.use("/student",adminAuthorizationMiddleware, studentRoute)
+router.use("/mentor", adminAuthorizationMiddleware,mentorRoute)
 
 export default router

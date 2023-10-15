@@ -5,13 +5,18 @@ const otpSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    email : {
-        type : String,
-        required : true
+    user: {
+        type: String,
+        required: true,
+        ref: "User"
     },
-    time : {
-        type : String,
-        required : true
+    time: {
+        type: String,
+        required: true
+    },
+    used : {
+        type : Boolean,
+        default : false
     }
 }, { timestamps: true })
 

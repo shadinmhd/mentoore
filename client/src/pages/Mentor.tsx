@@ -3,7 +3,6 @@ import BookSlot from "@/components/shared/BookSlot"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Api from "@/services/Api"
-import { bookingSchema } from "@/validators/bookingType"
 import { mentorSchema } from "@/validators/mentorType"
 import moment from "moment"
 import { useEffect, useState } from "react"
@@ -12,7 +11,13 @@ import { toast } from "react-toastify"
 import { z } from "zod"
 
 type MentorType = z.infer<typeof mentorSchema>
-type BookingType = z.Indices<typeof bookingSchema>
+
+interface BookingType {
+  _id: string,
+  startTime: string,
+  date: string,
+  status: string
+}
 
 const Mentor = () => {
   const [mentor, setMentor] = useState<MentorType>({

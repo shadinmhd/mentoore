@@ -43,12 +43,10 @@ export const studentGet = async (req: Request, res: Response) => {
     try {
         const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string) as { id: string }
         const user = await Student.findOne({ _id: payload.id }, { password: 0 })
-        console.log(user)
         res.send({
             success: true,
             message: "user fetched",
             user,
-            type: "user"
         })
     } catch (err) {
         console.log(err)

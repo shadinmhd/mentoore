@@ -47,7 +47,7 @@ const Wallet = () => {
   }, [refresh])
 
   return (
-    <div className="flex flex-col items-center p-10 justify-center w-full">
+    <div className="flex flex-col items-center py-10 px-2 justify-center w-screen sm:w-full">
       <div className="flex items-center justify-between w-full">
         <div color="text-blue-600">
           Balance: {balance}

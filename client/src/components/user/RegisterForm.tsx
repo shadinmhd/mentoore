@@ -33,7 +33,7 @@ const RegisterForm = () => {
             const {data} = await Api.post("/student/register", userData)
             if(data.success){
                 toast.success("account created successfully")
-                navigate("/login")
+                navigate("/otp")
             }else{
                 toast.error(data.message)
             }

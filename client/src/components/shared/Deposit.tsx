@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Api from "@/services/Api"
-import { faArrowDown, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState } from "react"
 import { toast } from "react-toastify"

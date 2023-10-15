@@ -38,21 +38,27 @@ export const registerMentor = async (req: Request, res: Response) => {
 
 export const getAllMentors = async (req: Request, res: Response) => {
     try {
-        const { category, name } = req.query
+        const { page, category, name } = req.query
 
-        let query: any = {}
+        let query: any = { type: "Mentor", status : "active" }
         if (category) {
             query.category = category
         }
         if (name) {
-            query.firstName = name
+            query.name = { $regex: name, $options: 'i' }
         }
-        const mentors = await Mentor.find(query, { password: 0 })
+        
+        const numbers = await User.countDocuments({status : "active"})
+        const mentors = await User.find(query, { password: 0 })
+            .skip((Number(page) - 1) * 15)
+            .limit(15)
+
         console.log(req.query)
         res.send({
             success: true,
             message: "fetched all mentors",
-            mentors
+            mentors,
+            pages : Math.ceil(numbers / 15)
         })
     } catch (err) {
         console.log(err)
@@ -108,7 +114,7 @@ export const getMentor = async (req: Request, res: Response) => {
         res.send({
             success: true,
             message: "user fetched",
-            mentor
+            user : mentor
         })
     } catch (err) {
         console.log(err)

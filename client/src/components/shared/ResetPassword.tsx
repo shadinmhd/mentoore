@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import Api from "@/services/Api"
-import { faKey, faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faKey } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState } from "react"
 import { toast } from "react-toastify"

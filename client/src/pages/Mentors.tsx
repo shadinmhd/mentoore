@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import Api from '@/services/Api'
 import { mentorSchema } from '@/validators/mentorType'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { z } from 'zod'
@@ -14,45 +14,57 @@ type MentorType = z.infer<typeof mentorSchema>
 const Mentors = () => {
     const [mentors, setMentors] = useState<MentorType[]>([])
     const [categories, setCategories] = useState<{ name: string }[]>([])
+    const [page, setPage] = useState(1)
+    const [availablePages, setAvailablePages] = useState(1)
+
     const [search, setSearch] = useState({
         name: "",
         category: ""
     })
     const navigate = useNavigate()
     useEffect(() => {
-        (async () => {
-            const { data } = await Api.get(`/mentor/getAll?name=${search.name}&category=${search.category}`)
-            if (data.success) {
-                setMentors(data.mentors)
-
-                console.log(data)
-            } else {
-                toast.error("failed to fetch mentors")
-            }
-        })(),
+        if (localStorage.getItem("token")) {
             (async () => {
-                const { data } = await Api.get("/category")
+                const { data } = await Api.get(`/mentor/getAll?name=${search.name}&category=${search.category}&page=${page}`)
                 if (data.success) {
-                    setCategories(data.categories)
+                    setMentors(data.mentors)
+                    setAvailablePages(data.pages)
+                    console.log(data)
                 } else {
-                    toast.error("couldn't get categories")
+                    toast.error("failed to fetch mentors")
                 }
-            })()
-    }, [search])
+            })(),
+                (async () => {
+                    const { data } = await Api.get("/category")
+                    if (data.success) {
+                        setCategories(data.categories)
+                    } else {
+                        toast.error("couldn't get categories")
+                    }
+                })()
+        } else {
+            toast.error("please login")
+            navigate("/login")
+        }
+    }, [search, page])
 
 
     const categoryChangeHandler = (e: string) => {
         setSearch((prev) => ({ name: prev.name, ["category"]: e }))
     }
 
+    const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch((prev) => ({ category: prev.category, ["name"]: e.target.value }))
+    }
+
     return (
-        <div className='pt-16'>
+        <div className='pt-16 flex flex-col items-center justify-between'>
             <Navbar />
             <div className='flex gap-2 w-full px-5 py-2'>
-                <Input placeholder='search' />
+                <Input placeholder='search' onChange={handleSearchChange} />
                 <Select name='status' onValueChange={categoryChangeHandler}>
                     <SelectTrigger className='w-auto'>
-                        <SelectValue >category</SelectValue>
+                        <SelectValue>{search.category || "category"}</SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value=''>category</SelectItem>
@@ -82,6 +94,15 @@ const Mentors = () => {
                     }
                 </TableBody>
             </Table>
+            <div className='flex items-center justify-center gap-2'>
+                <div onClick={() => page != 1 && setPage(page - 1)} className='p-1 bg-blue-600 text-white rounded-sm flex items-center justify-center font-semibold cursor-pointer'>
+                    <span>&lt;</span>
+                </div>
+                <div className='border-[1.5px] border-black rounded-sm p-1'>{page}</div>
+                <div onClick={() => page < availablePages && setPage(page + 1)} className='p-1 bg-blue-600 text-white rounded-sm flex items-center justify-center font-semibold cursor-pointer'>
+                    <span>&gt;</span>
+                </div>
+            </div>
         </div>
     )
 }

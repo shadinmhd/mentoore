@@ -16,7 +16,7 @@ export const adminGet = async (req: Request, res: Response) => {
         res.send({
             success: true,
             message: "fetched admin data",
-            admin
+            user: admin
         })
     } catch (err) {
         console.log(err)

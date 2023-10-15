@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Api from '@/services/Api'
-import { mentorSchema } from '@/validators/mentorType'
 import { faArrowRightFromBracket, faSave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
@@ -30,7 +29,6 @@ type MentorType = {
   }[];
 }
 const Settings = () => {
-  const statusValues = ["active", "blocked"]
   const [categories, setCategories] = useState<{ name: string }[]>([])
   const [mentor, setMentor] = useState<MentorType>({
     _id: "",
@@ -49,8 +47,8 @@ const Settings = () => {
     (async () => {
       const { data } = await Api.get(`/mentor`)
       if (data.success) {
-        console.log(data.mentor)
-        setMentor(data.mentor)
+        console.log(data.user)
+        setMentor(data.user)
       } else {
         toast.error("couldn't get mentor details")
       }

@@ -25,15 +25,23 @@ interface Props {
 
 const BookSlot: React.FC<Props> = ({ id, date, startTime, refresh }) => {
     const [userBalance, setUserBalance] = useState(0)
+    const [loggedIn, setLoggedIn] = useState<string | boolean | null>(localStorage.getItem("token"))
     const navigate = useNavigate()
 
     useEffect(() => {
+        if (localStorage.getItem("token")) {
+            setLoggedIn(true)
+        };
         (async () => {
-            const { data } = await Api.get("/student")
-            if (data.success) {
-                setUserBalance(data.user.wallet.balance)
+            if (loggedIn) {
+                const { data } = await Api.get("/wallet")
+                if (data.success) {
+                    setUserBalance(data.wallet.balance)
+                } else {
+                    toast.error(data.message)
+                }
             } else {
-                toast.error("somethin went wrong please try again later")
+
             }
         })(),
             (() => {
@@ -75,9 +83,15 @@ const BookSlot: React.FC<Props> = ({ id, date, startTime, refresh }) => {
                         insufficent balance
                     </div>
                 }
+                {
+                    !loggedIn &&
+                    <div className="text-red-600">
+                        you are not loggedIn
+                    </div>
+                }
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction disabled={userBalance < 100} onClick={handleSubmit} >Book</AlertDialogAction>
+                    <AlertDialogAction disabled={!loggedIn || userBalance < 100} onClick={handleSubmit} >Book</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

@@ -11,6 +11,7 @@ interface IUser {
         balance: number,
     },
     status: string,
+    verified: boolean
 }
 
 interface IStudent extends IUser {
@@ -29,7 +30,7 @@ interface IMentor extends IUser {
 }
 
 interface IAdmin extends IUser {
-   idAdmin : boolean
+    idAdmin: boolean
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -58,6 +59,10 @@ const userSchema = new mongoose.Schema<IUser>({
         type: String,
         default: "active"
     },
+    verified: {
+        type: Boolean,
+        default: false
+    }
 
 }, { discriminatorKey: "type" });
 

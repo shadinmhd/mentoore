@@ -2,7 +2,7 @@ import axios from "axios"
 import { toast } from "react-toastify"
 
 const Api = axios.create({
-    baseURL: "http://localhost:8000"
+    baseURL: "https://192.168.1.4:8000"
 })
 
 if (localStorage.getItem("token")) {

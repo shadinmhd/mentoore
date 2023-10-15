@@ -7,10 +7,9 @@ import Wallet from '../shared/Wallet'
 import Settings from './Settings'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
-import Chat from './Chat'
+import Messages from '../shared/Messages'
 
 const buttons = [
-    { to: "/student", text: "Dashboard", icon: faDashboard },
     { to: "/student/messages", text: "Messages", icon: faMessage },
     { to: "/student/bookings", text: "Bookings", icon: faBook },
     { to: "/student/Wallet", text: "Wallet", icon: faWallet },
@@ -21,26 +20,30 @@ const UserRouter = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (localStorage.getItem("type")) {
-            if (localStorage.getItem("type") != "student") {
-                toast.error("you are not authorized")
-                navigate("/")
+        (async () => {
+            if (localStorage.getItem("type")) {
+                if (localStorage.getItem("type") != "student") {
+                    toast.error("you are not authorized")
+                    navigate("/")
+                }
+            } else {
+                toast.error("please login")
+                navigate("/login")
             }
-        } else {
-            toast.error("please login")
-            navigate("/login")
-        }
-    })
+        })()
+    }, [])
+
     return (
-        <div className='flex'>
+        <div className='flex w-screen'>
             <SideBar buttons={buttons} />
-            <Routes >
-                <Route path='/' element={<Dashboard />} />
-                <Route path='/bookings' element={<Bookings />} />
-                <Route path='/wallet' element={<Wallet />} />
-                <Route path='/settings' element={<Settings />} />
-                <Route path='/messages' element={<Chat />} />
-            </Routes>
+            <div className='pt-10 w-full'>
+                <Routes >
+                    <Route path='/bookings' element={<Bookings />} />
+                    <Route path='/wallet' element={<Wallet />} />
+                    <Route path='/settings' element={<Settings />} />
+                    <Route path='/messages' element={<Messages />} />
+                </Routes>
+            </div>
         </div>
     )
 }

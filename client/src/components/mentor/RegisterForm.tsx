@@ -51,7 +51,7 @@ const RegisterForm = () => {
             const { data } = await Api.post("/mentor/register", menotorData)
             if (data.success) {
                 toast.success("accountd registered")
-                navigate("/login")
+                navigate("/otp")
             } else {
                 toast.error(data.message)
             }

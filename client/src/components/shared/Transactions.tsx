@@ -13,10 +13,10 @@ interface Props {
     id : string
 }
 
-const Transactions: React.FC<Props> = ({ transactions, id }) => {
+const Transactions: React.FC<Props> = ({ transactions }) => {
 
     return (
-        <>
+        <div className='flex flex-col items-center w-full'>
             <div className="font-sans text-xl font-bold p-2">Transactions</div>
             <Table>
                 <TableHeader>
@@ -30,7 +30,7 @@ const Transactions: React.FC<Props> = ({ transactions, id }) => {
                 <TableBody>
                     {transactions &&
                         transactions.map((e, i) => (
-                            <TableRow className={e.to.name != id ? "text-green-600" : "text-red-600"} key={i}>
+                            <TableRow className={"text-blue-600"} key={i}>
                                 {e.from == e.to ?
                                     <>
                                         <TableCell>you</TableCell>
@@ -49,7 +49,7 @@ const Transactions: React.FC<Props> = ({ transactions, id }) => {
                     }
                 </TableBody>
             </Table>
-        </>
+        </div>
     )
 }
 

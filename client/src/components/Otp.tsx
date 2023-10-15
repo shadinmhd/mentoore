@@ -1,68 +1,77 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from '../redux/store'
-import authActions from '../redux/features/authActions'
-import { useNavigate } from 'react-router-dom'
-import { PuffLoader } from 'react-spinners'
+import { useContext, useEffect, useRef, useState } from "react"
+import { Input } from "./ui/input"
+import Api from "@/services/Api"
+import { toast } from "react-toastify"
+import { Button } from "./ui/button"
+import { useNavigate } from "react-router-dom"
 
-interface Props {
-  email: string
-}
-
-const Otp: React.FC<Props> = ({ email }) => {
-  const [otp, setOtp] = useState<string>("")
-  const type = useSelector((state: RootState) => state.auth.type)
-  let user: any
-  let loading: any
-  if (type == "user")
-    user = useSelector((state: RootState) => state.user.user)
-  loading = useSelector((state: RootState) => state.user.loading)
-  if (type == "mentor")
-    loading = useSelector((state: RootState) => state.mentor.loading)
-  user = useSelector((state: RootState) => state.mentor.mentor)
-
-
-  const dispatch: AppDispatch = useDispatch()
+const Otp = () => {
+  const [otp, setOtp] = useState("")
+  const [active, setActive] = useState(false)
   const navigate = useNavigate()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    dispatch(authActions.getOtp(user.email))
-    console.log(user.email)
-  }, [dispatch])
+    (async () => {
+      if (localStorage.getItem("token")) {
+        const { data: { verified } } = await Api.get("/otp/status")
+        if (verified)
+          navigate("/")
+        const { data } = await Api.get("/otp")
+        if (data.success) {
+          toast.success("otp send successfully check your email")
+        } else {
+          toast.error(data.message)
+        }
+      }else{
+        navigate("/")
+      }
+    })()
+  }, [])
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const { value } = e.target
-    setOtp(value)
-  }
+  useEffect(() => {
+    if (otp.length != 6) {
+      console.log(otp.length)
+      inputRef.current!.style.outlineColor = "red"
+      setActive(false)
+    } else {
+      setActive(true)
+      inputRef.current!.style.outlineColor = "blue"
+    }
+  }, [otp])
 
-  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const { payload } = await dispatch(authActions.verifyOtp({ email, otp }))
-    if (payload.success) {
-      navigate("/login")
+  const verify = async () => {
+    console.log(otp)
+    const { data } = await Api.post("/otp", { otp })
+    if (data.success) {
+      toast.success(data.message)
+      navigate("/")
+    } else {
+      toast.error(data.message)
     }
   }
 
   return (
-    <>
-      {
-        loading ?
-          <PuffLoader color='#2563eb' /> :
-          <div className='h-screen flex items-center justify-center'>
-            <form
-              className='rounded-lg flex px-5 py-9 flex-col gap-5 items-center bg-white drop-shadow-lg'
-              onSubmit={submitHandler}>
-              <label className='text-3xl mb-5 font-bold text-blue-600' > OTP </label>
-              <input
-                className='w-full focus:outline-blue-700 border-[1.4px] rounded-md border-blue-500 px-2 py-1 text-blue-600'
-                placeholder='enter otp' type="text" onChange={changeHandler} />
-              <button
-                className='hover:bg-white hover:text-blue-600 hover:shadow-2xl transition-all w-full py-[7px] bg-blue-600 rounded-lg text-white'
-                type="submit">verify otp</button>
-            </form>
-          </div>}
-    </>
+    <div className="h-screen w-screen flex items-center justify-center">
+      <div className="rounded-lg gap-5 border-blue-600 border-[1px] shadow-md p-5 flex flex-col items-center justify-center">
+        <span className="text-xl text-center font-semibold w-full">
+          Verify Otp
+        </span>
+        <p className="text-gray-500 text-sm">
+          Please verify your account with otp
+        </p>
+        <Input
+          ref={inputRef}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setOtp(e.target.value)}
+          placeholder="Otp"
+          type="text"
+          name="otp"
+        />
+        <Button disabled={!active} onClick={verify}>
+          Verify
+        </Button>
+      </div>
+    </div>
   )
 }
 

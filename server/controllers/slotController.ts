@@ -114,14 +114,14 @@ export const deleteSlot = async (req: Request, res: Response) => {
                     message: "insuficcent balance"
                 })
             }
-            await Student.updateOne({_id : searchSlot.user}, {$inc: {"wallet.balance": 100}})
+            await Student.updateOne({ _id: searchSlot.user }, { $inc: { "wallet.balance": 100 } })
             await Mentor.updateOne({ _id: searchSlot.mentor }, { $inc: { "wallet.balance": -100 } })
             await new transactionModel({
-                amount : 100,
-                from : searchSlot.mentor,
-                to : searchSlot.user,
-                time : moment(),
-                type : "cancel booking"
+                amount: 100,
+                from: searchSlot.mentor,
+                to: searchSlot.user,
+                time: moment(),
+                type: "cancel booking"
             }).save()
         }
 
@@ -135,6 +135,47 @@ export const deleteSlot = async (req: Request, res: Response) => {
     } catch (err) {
         console.log(err)
         res.send({
+            success: false,
+            message: "something went wrong"
+        })
+    }
+}
+
+export const completeSession = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string) as { id: string }
+
+        const mentor = await Mentor.findOne({ _id: payload.id }, { password: 0 })
+        const slot = await slotModel.findOne({ _id: id, mentor: mentor._id })
+
+        if (!slot) {
+            return res.send({
+                success: false,
+                message: "invalid mentor or slot"
+            })
+        }
+
+        const now = moment()
+        const sessionTime = moment(slot.startTime)
+        const diff = now.diff(sessionTime, "minutes")
+        console.log(diff)
+        if (diff < 1) {
+            return res.send({
+                success: false,
+                message: "cannot complete session before session time"
+            })
+        }
+
+        await slotModel.updateOne({ _id: id }, { $set: { status: "complete" } })
+
+        res.send({
+            success: true,
+            message: "session completed"
+        })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).send({
             success: false,
             message: "something went wrong"
         })

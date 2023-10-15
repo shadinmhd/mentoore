@@ -7,17 +7,18 @@ import dotenv from "dotenv"
 import morgan from "morgan"
 import adminAuthorizatoinMiddleware from "./middlewares/adminAuthorizationMiddleware"
 import connectDb from "./configs/connectDb"
-import { Server } from "socket.io"
-import http from "http"
+import messageSocket from "./sockets/messageSocket"
+import https from "https"
+import fs from "fs"
 dotenv.config()
 
 const app = express()
+const server = https.createServer({
+    key: fs.readFileSync("./localhost+2-key.pem"),
+    cert: fs.readFileSync("./localhost+2.pem")
+}, app)
+messageSocket(server)
 
-const server = http.createServer(app)
-const io = new Server(server)
-io.on("connection", () => {
-    console.log(colors.green.bold("user connected"))
-})
 
 connectDb()
 app.use("/public/user", express.static("./public/user"))
@@ -44,6 +45,10 @@ import bookingRoute from "./routes/bookingRoute"
 import authRoute from "./routes/authRoute"
 import slotRoute from "./routes/slotRoute"
 import walletRoute from "./routes/walletRoute"
+import messageRoute from "./routes/messageRoute"
+import otpRoute from "./routes/OtpRoute"
+import dashRoute from "./routes/dashRoute"
+import userRoute from "./routes/userRoute"
 
 app.use("/auth", authRoute)
 app.use("/admin", adminAuthorizatoinMiddleware, adminRoute)
@@ -54,9 +59,19 @@ app.use("/payment", paymentRoute)
 app.use("/booking", bookingRoute)
 app.use("/slot", slotRoute)
 app.use("/wallet", walletRoute)
+app.use("/message", messageRoute)
+app.use("/otp", otpRoute)
+app.use("/dash", dashRoute)
+app.use("/user", userRoute)
+
+app.get("/", (req: any, res: any) => {
+    res.send({
+        url: "https://localhost:5173"
+    })
+})
 
 const PORT = process.env.PORT as string || 8000
-server.listen(PORT, () => {
-    console.log(colors.cyan.bold(`server started http://localhost:${PORT}`))
-}
-)
+const localIp = "0.0.0.0"
+server.listen(Number(PORT), localIp, () => {
+    console.log(colors.cyan.bold(`server started https://${localIp}:${PORT}`))
+})

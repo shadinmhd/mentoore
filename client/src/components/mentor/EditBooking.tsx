@@ -14,10 +14,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import React, { useState } from "react"
 import { toast } from "react-toastify"
 import { Calendar } from "../ui/calendar"
-import { TimePicker } from "react-time-picker"
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { cn } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { cn } from "@/lib/utils"
+import { CalendarIcon } from "lucide-react"
 import moment from "moment"
 import "react-time-picker/dist/TimePicker.css"
 import { Input } from "../ui/input"

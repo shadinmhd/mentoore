@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Api from '@/services/Api'
 import { userSchema } from '@/validators/userType'
-import { faArrowLeft, faSave, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faSave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -99,7 +99,7 @@ const User = () => {
             <SelectContent>
               {
                 statusValues.map((e, i) =>
-                  <SelectItem value={e}>
+                  <SelectItem key={i} value={e}>
                     {e}
                   </SelectItem>
                 )

@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Api from '@/services/Api'
 import { mentorSchema } from '@/validators/mentorType'
-import { faArrowLeft, faSave, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faSave } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -17,17 +17,15 @@ type MentorType = z.infer<typeof mentorSchema>
 
 const Mentor = () => {
     const { id } = useParams()
-    const statusValues = ["pending", "active", "blocked"]
     const [mentor, setMentor] = useState<MentorType>({
         _id: "",
         description: "",
         email: "",
-        firstName: "",
         image: "",
-        lastName: "",
         status: "",
         category: "",
-        bookings : []
+        bookings: [],
+        name: ""
     })
     const [categories, setCategories] = useState<{ name: string }[]>([])
     useEffect(() => {
@@ -80,10 +78,10 @@ const Mentor = () => {
     const handleSave = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         console.log(mentor)
-        const {data} = await Api.put("/admin/mentor", mentor)
-        if(data.success){
+        const { data } = await Api.put("/admin/mentor", mentor)
+        if (data.success) {
             toast.success("changes saved")
-        }else{
+        } else {
             toast.error(data.message)
         }
     }
@@ -98,21 +96,17 @@ const Mentor = () => {
             <Avatar className='bg-black'>
                 <AvatarImage src={mentor?.image} />
                 <AvatarFallback>
-                    {mentor.firstName && mentor?.firstName[0].toUpperCase()}
+                    {mentor.name.split(" ")[0]}
                 </AvatarFallback>
             </Avatar>
             <div className='flex flex-col gap-4 w-full'>
                 <div className='flex w-full gap-5'>
-                    <Label>first name: </Label>
-                    <Input onChange={changeHandler} className='w-auto' name='firstName' defaultValue={mentor?.firstName} />
-                </div>
-                <div className='flex w-full gap-5'>
-                    <Label>last name: </Label>
-                    <Input onChange={changeHandler} className='w-auto' name='firstName' defaultValue={mentor?.lastName} />
+                    <Label>name: </Label>
+                    <Input onChange={changeHandler} className='w-auto' name='name' defaultValue={mentor?.name} />
                 </div>
                 <div className='flex w-full gap-5'>
                     <Label>email: </Label>
-                    <Input onChange={changeHandler} className='w-auto' name='firstName' defaultValue={mentor?.email} />
+                    <Input onChange={changeHandler} className='w-auto' name='email' defaultValue={mentor?.email} />
                 </div>
                 <div className='flex w-full gap-5'>
                     <Label>description: </Label>
