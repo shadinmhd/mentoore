@@ -101,9 +101,8 @@ export const getKey = (req: Request, res: Response) => {
 export const getTransactions = async (req: Request, res: Response) => {
     try {
         const payload = jwt.verify(req.headers.authorization!, process.env.jwt as string) as { id: string }
+        const transactions = await transactionModel.find({ $or: [{ from: payload.id }, { to: payload.id }] }).populate("from").populate("to").sort("-createdAt")
 
-        const transactions = await transactionModel.find({ $or: [{ from: payload.id }, { to: payload.id }] }).populate("from").populate("to")
-            
         res.send({
             success: true,
             message: "fetched transactions",

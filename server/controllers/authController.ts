@@ -28,10 +28,10 @@ export const login = async (req: Request, res: Response) => {
             })
         }
 
-        if(userSearch.status =="blocked"){
+        if (userSearch.status == "blocked") {
             return res.send({
-                success : false,
-                message : "this account is blocked "
+                success: false,
+                message: "this account is blocked "
             })
         }
 

@@ -4,25 +4,25 @@ const transactionSchema = new mongoose.Schema({
     from: {
         type: String,
         required: true,
-        ref : "User"
+        ref: "User"
     },
     to: {
-        type : String,
-        required : true,
-        ref : "User"
+        type: String,
+        required: true,
+        ref: "User"
     },
     time: {
-        type : String,
-        required : true
+        type: String,
+        required: true
     },
     amount: {
-        type : Number,
-        required : true
+        type: Number,
+        required: true
     },
-    type : {
-        type : String,
-        required : true
+    type: {
+        type: String,
+        required: true
     }
-},{timestamps: true})
+}, { timestamps: true })
 
 export default mongoose.model("transactions", transactionSchema)

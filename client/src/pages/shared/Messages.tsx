@@ -4,11 +4,10 @@ import { Input } from "@/components/ui/input"
 import UserContext from "@/context/UserContext"
 import Api from "@/services/Api"
 import socket from "@/services/Socket"
-import { faPaperPlane, faPhone } from "@fortawesome/free-solid-svg-icons"
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import moment from "moment"
 import React, { useContext, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify"
 
 
@@ -30,8 +29,6 @@ const Messages = () => {
   const [messages, setMessages] = useState<Set<IMessage>>(new Set())
   const [content, setContent] = useState("")
   const user = useContext(UserContext)
-
-  const navigate = useNavigate()
 
   useEffect(() => {
     (async () => {
@@ -114,7 +111,7 @@ const Messages = () => {
                 setContent(e.target.value)
               }}
               placeholder="Enter message" />
-            <div className="flex gap-2 h-full w-full items-center justify-center">
+            <div className="flex">
               <Button disabled={!current || !content} onClick={sendMessage}>
                 <FontAwesomeIcon
                   className="w-full hover:translate-x-1 hover:-translate-y-1 transition-all"

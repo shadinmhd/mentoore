@@ -21,6 +21,7 @@ import MessageNotification from "./components/shared/MessageNotification"
 const App = () => {
 	const navigate = useNavigate()
 	const [call, setCall] = useState(false)
+	// @ts-ignore
 	const [caller, setCaller] = useState({
 		name: "",
 		_id: ""

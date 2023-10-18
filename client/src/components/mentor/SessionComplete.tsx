@@ -1,5 +1,5 @@
 import Api from '@/services/Api'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { toast } from 'react-toastify'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog'
 import { Button } from '../ui/button'
@@ -15,6 +15,7 @@ const SessionComplete: React.FC<Props> = ({ id, refresh }) => {
     const { data } = await Api.post(`/slot/complete/${id}`)
     if (data.success) {
       toast.success(data.message)
+      refresh((prev) => prev + 1 )
     } else {
       toast.error(data.message)
     }

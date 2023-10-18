@@ -64,7 +64,7 @@ const userSchema = new mongoose.Schema<IUser>({
         default: false
     }
 
-}, { discriminatorKey: "type" });
+}, { discriminatorKey: "type", timestamps: true });
 
 const studentSchema = new mongoose.Schema<IStudent>({
     name: String,

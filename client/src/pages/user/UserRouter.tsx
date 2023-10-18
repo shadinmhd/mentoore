@@ -1,7 +1,6 @@
 import SideBar from '@/components/SideBar'
-import { faBook, faDashboard, faGear, faMessage, faWallet } from '@fortawesome/free-solid-svg-icons'
+import { faBook, faGear, faMessage, faWallet } from '@fortawesome/free-solid-svg-icons'
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import Dashboard from './Dashboard'
 import Bookings from './Bookings'
 import Wallet from '../shared/Wallet'
 import Settings from './Settings'
