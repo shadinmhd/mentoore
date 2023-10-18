@@ -14,14 +14,12 @@ import UserContext from "./context/UserContext"
 import Api from "./services/Api"
 import Otp from "./components/Otp"
 import socket from "./services/Socket"
-import Call from "./components/shared/Call"
 import MessageNotification from "./components/shared/MessageNotification"
 import Banned from "./pages/shared/Banned"
 
 
 const App = () => {
 	const navigate = useNavigate()
-	const [call, setCall] = useState(false)
 	// @ts-ignore
 	const [caller, setCaller] = useState({
 		name: "",

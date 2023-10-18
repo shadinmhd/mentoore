@@ -25,6 +25,7 @@ interface IMessage {
 
 const Dashboard = () => {
   const [bookedSlots, setBookedSLots] = useState(0)
+  // @ts-ignore
   const [openslots, setOpenSlots] = useState(0)
   const [completed, setCompleted] = useState(0)
   const [user, setUser] = useState<IUser>()
