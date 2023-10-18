@@ -89,16 +89,10 @@ const Mentor = () => {
     return (
         <div className='flex relative flex-col gap-8 items-start justify-center w-full p-10'>
             <Link to="/admin/mentors">
-                <Button variant="outline" className='absolute left-10 top-10'>
+                <Button variant="outline" className=''>
                     <FontAwesomeIcon icon={faArrowLeft} />
                 </Button>
             </Link>
-            <Avatar className='bg-black'>
-                <AvatarImage src={mentor?.image} />
-                <AvatarFallback>
-                    {mentor.name.split(" ")[0]}
-                </AvatarFallback>
-            </Avatar>
             <div className='flex flex-col gap-4 w-full'>
                 <div className='flex w-full gap-5'>
                     <Label>name: </Label>
@@ -119,7 +113,7 @@ const Mentor = () => {
                             <SelectValue >{mentor.status}</SelectValue>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem defaultChecked value="pending" > pending</SelectItem>
+                            <SelectItem value="new"> new</SelectItem>
                             <SelectItem value="active" > active</SelectItem>
                             <SelectItem value="banned" > banned</SelectItem>
                         </SelectContent>

@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken"
 import { Mentor, Student, User } from "../models/userModel"
 import messageModel from "../models/messageModel"
 import slotModel from "../models/slotModel"
+import mongoose from "mongoose"
 
 export const getMentor = async (req: Request, res: Response) => {
     try {
@@ -16,7 +17,13 @@ export const getMentor = async (req: Request, res: Response) => {
             })
         }
 
+        console.log(id)
         const chartData = await slotModel.aggregate([
+            {
+                $match: {
+                    mentor: `ObjectId${id}`,
+                },
+            },
             {
                 $group: {
                     _id: {
@@ -40,7 +47,11 @@ export const getMentor = async (req: Request, res: Response) => {
                     _id: 0,
                 },
             },
+            {
+                $sort: { date: 1 },
+            },
         ])
+
 
         const bookedSlots = await slotModel.countDocuments({ mentor: id, status: "booked" })
         const openslots = await slotModel.countDocuments({ mentor: id, status: "open" })
@@ -65,6 +76,7 @@ export const getMentor = async (req: Request, res: Response) => {
         })
     }
 }
+
 export const getAdmin = async (req: Request, res: Response) => {
     try {
         const { id } = jwt.verify(req.headers.authorization!, process.env.jwt as string) as { id: string }
@@ -94,24 +106,70 @@ export const getAdmin = async (req: Request, res: Response) => {
             {
                 $sort: { _id: 1 }
             }
-        ])
+        ]).sort("_id")
+
+
+        const slotData = await slotModel.aggregate([
+            {
+                $match: {
+                    status: { $ne: "cancelled" },
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: '$createdAt' },
+                        month: { $month: '$createdAt' },
+                        day: { $dayOfMonth: '$createdAt' },
+                    },
+                    count: { $sum: 1 },
+                },
+            },
+            {
+                $project: {
+                    date: {
+                        $dateToString: {
+                            format: '%Y-%m-%d',
+                            date: {
+                                $dateFromParts: {
+                                    year: '$_id.year',
+                                    month: '$_id.month',
+                                    day: '$_id.day',
+                                },
+                            },
+                        },
+                    },
+                    count: 1,
+                    _id: 0,
+                },
+            },
+        ]).sort("date")
 
         const userCount = await User.countDocuments() - 1
         const mentorCount = await Mentor.countDocuments()
         const studentCount = await Student.countDocuments()
+        const newMentors = await Mentor.countDocuments({ status: "new" })
 
         const completedBookings = await slotModel.countDocuments({ status: "complete" })
         const bookings = await slotModel.countDocuments({ status: "booked" })
+        const cancelledBookings = await slotModel.countDocuments({ status: "cancelled" })
+
+        const slots = {
+            completed: completedBookings,
+            booked: bookings,
+            cancelled: cancelledBookings
+        }
 
         res.send({
             success: true,
             message: "data fetched",
             userData,
+            slotData,
             userCount,
             mentorCount,
             studentCount,
-            completedBookings,
-            bookings
+            slots,
+            newMentors
         })
     } catch (err) {
         console.log(err)

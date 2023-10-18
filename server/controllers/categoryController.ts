@@ -3,7 +3,17 @@ import categoryModel from "../models/categoryModel"
 
 export const getCategories = async (req: Request, res: Response) => {
     try {
-        const categories = await categoryModel.find({}).sort({ name: 1 })
+        const { name } = req.query
+
+        let query = {}
+        if (name) {
+            query = { name: { $regex: name, $options: 'i' } }
+        }
+
+        console.log(name)
+
+
+        const categories = await categoryModel.find(query).sort({ name: 1 })
         res.send({
             success: true,
             categories
@@ -100,13 +110,13 @@ export const editCategory = async (req: Request, res: Response) => {
             })
         }
 
-        await categoryModel.updateOne({ _id: id }, {name})
+        await categoryModel.updateOne({ _id: id }, { name })
 
         res.send({
-            success : true,
-            message : "category editor successfully"
+            success: true,
+            message: "category editor successfully"
         })
-        
+
     } catch (err) {
         console.log(err)
         res.send({

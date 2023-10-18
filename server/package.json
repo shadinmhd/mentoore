@@ -3,10 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "rimraf dist && npx tsc",
-    "prestart": "npm run build",
-    "start": "node dist/main.js",
-    "dev": "concurrently \"npx tsc -w \" \"nodemon dist/main.js \""
+    "start": "ts-node main.ts",
+    "dev": "nodemon main.ts"
   },
   "keywords": [],
   "author": "",

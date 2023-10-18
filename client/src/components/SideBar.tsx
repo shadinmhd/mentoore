@@ -29,9 +29,9 @@ const SideBar: React.FC<{ buttons: Props[] }> = ({ buttons }) => {
         <>
             {
                 active &&
-                <div className={`flex gap-5 text-blue-600 bg-white flex-col h-screen shadow-lg w-fit px-5 py-10 ${!active && `hidden`}`}>
+                <div className={`flex gap-5 text-blue-600 bg-white flex-col shadow-lg w-fit px-5 py-10 ${!active && `hidden`}`}>
                     <Link to="/"
-                        className="text-4xl font-semibold font-sans">
+                        className="text-4xl font-semibold font-sans mb-5">
                         Mentoore
                     </Link>
                     {buttons.map((e, i) => {
@@ -57,9 +57,10 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({ to, icon, text }) => {
+    const currlocation = window.location.href.split("/").pop()
 
     return (
-        <Link to={to} className={`hover:text-white transition-all hover:scale-105 hover:translate-x-1 hover:bg-blue-600 rounded-lg py-2 px-4 font-semibold flex gap-2 items-center text-center`} >
+        <Link to={to} className={`${to.split("/").pop() == currlocation && "text-white bg-blue-600"} hover:text-white transition-all hover:scale-105 hover:translate-x-1 hover:bg-blue-600 rounded-lg py-2 px-4 font-semibold flex gap-2 items-center text-center`} >
             <FontAwesomeIcon icon={icon} />
             <span> {text}</span>
         </Link>

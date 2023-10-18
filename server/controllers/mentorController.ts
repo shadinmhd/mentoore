@@ -20,7 +20,8 @@ export const registerMentor = async (req: Request, res: Response) => {
             email,
             name,
             password,
-            category
+            category,
+            status : "new"
         }).save()
 
         res.send({

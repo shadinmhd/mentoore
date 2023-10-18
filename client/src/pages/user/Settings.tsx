@@ -83,6 +83,10 @@ const Settings = () => {
           <Label>email: </Label>
           <Input onChange={changeHandler} className='w-auto' name='email' defaultValue={user?.email} />
         </div>
+        <div className='flex gap-5 items-center'>
+          <div>status: </div>
+          <div>{user.status}</div>
+        </div>
         <div className='flex gap-2 flex-col'>
             <ResetPassword />
           <div className='flex items-center gap-3'>

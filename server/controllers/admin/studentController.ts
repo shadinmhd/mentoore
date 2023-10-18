@@ -29,7 +29,21 @@ export const studentGet = async (req: Request, res: Response) => {
 
 export const studentGetAll = async (req: Request, res: Response) => {
     try {
-        const users = await Student.find({}, { password: 0 })
+        const { name, status } = req.query
+        console.log(name, status)
+
+        let query: any = {}
+
+        if (status) {
+            query.status = status
+        }
+
+        if (name) {
+            query.name = { $regex: name, $options: "i" }
+        }
+
+        const users = await Student.find(query, { password: 0 })
+
         res.send({
             success: true,
             message: "users fetched",

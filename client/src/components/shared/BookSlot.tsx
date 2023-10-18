@@ -27,6 +27,7 @@ const BookSlot: React.FC<Props> = ({ id, date, startTime, refresh }) => {
     const [userBalance, setUserBalance] = useState(0)
     const [loggedIn, setLoggedIn] = useState<string | boolean | null>(localStorage.getItem("token"))
     const navigate = useNavigate()
+    const type = localStorage.getItem("type")
 
     useEffect(() => {
         if (localStorage.getItem("token")) {
@@ -34,11 +35,13 @@ const BookSlot: React.FC<Props> = ({ id, date, startTime, refresh }) => {
         };
         (async () => {
             if (loggedIn) {
-                const { data } = await Api.get("/wallet")
-                if (data.success) {
-                    setUserBalance(data.wallet.balance)
-                } else {
-                    toast.error(data.message)
+                if (type != "admin") {
+                    const { data } = await Api.get("/wallet")
+                    if (data.success) {
+                        setUserBalance(data.wallet.balance)
+                    } else {
+                        toast.error(data.message)
+                    }
                 }
             } else {
 

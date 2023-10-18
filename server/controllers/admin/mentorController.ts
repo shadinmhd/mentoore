@@ -38,7 +38,23 @@ export const mentorGet = async (req: Request, res: Response) => {
 
 export const mentorGetAll = async (req: Request, res: Response) => {
     try {
-        const mentors = await Mentor.find()
+
+        const { name, status, category } = req.query
+        console.log(name,status,category)
+        let query: any = {}
+        if (name) {
+            query.name = { $regex: name, $options : "i" }
+        }
+
+        if (status) {
+            query.status = status
+        }
+
+        if (category) {
+            query.category = category
+        }
+
+        const mentors = await Mentor.find(query, { password: 0 })
         res.send({
             success: true,
             message: "all users fetched",
@@ -63,7 +79,7 @@ export const mentorNew = async (req: Request, res: Response) => {
                 success: false,
                 message: "fill all fields"
             })
-    }
+        }
 
         const newMentor = new Mentor({
             name,
@@ -90,10 +106,10 @@ export const mentorNew = async (req: Request, res: Response) => {
 export const mentorEdit = async (req: Request, res: Response) => {
     try {
         const { _id, firstName, lastName, email, image, status, bookings, description } = req.body
-        if (!_id || !firstName || !lastName || !email) {
+        if (!_id) {
             return res.send({
                 success: false,
-                message: "please fill all fields"
+                message: "no id provided"
             })
         }
 

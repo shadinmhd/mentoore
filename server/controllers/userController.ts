@@ -4,7 +4,6 @@ import { User } from "../models/userModel";
 
 export const getUser = async (req: Request, res: Response) => {
     try {
-        // const { id } = jwt.verify(req.headers.authorization!, process.env.jwt as string) as { id: string }
         const { id } = req.params
         const user = await User.findOne({ _id: id }, { password: 0 })
 
@@ -28,3 +27,25 @@ export const getUser = async (req: Request, res: Response) => {
         })
     }
 }
+
+export const getSelf = async (req: Request, res: Response) => {
+    try {
+        const { id } = jwt.verify(req.headers.authorization!, process.env.jwt as string) as { id: string }
+
+        console.log(id)
+        const user = await User.findOne({ _id: id }, { password: 0 })
+
+        res.send({
+            success: true,
+            message: "user fetched successfully",
+            user
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            success: false,
+            message: "something went wrong"
+        })
+    }
+} 

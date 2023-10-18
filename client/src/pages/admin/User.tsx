@@ -17,7 +17,7 @@ type UserType = z.infer<typeof userSchema>
 
 const User = () => {
   const { id } = useParams()
-  const statusValues = ["active", "blocked"]
+  const statusValues = ["active", "banned"]
   const [user, setUser] = useState<UserType>({
     _id: "",
     email: "",

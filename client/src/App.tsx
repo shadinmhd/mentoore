@@ -16,6 +16,7 @@ import Otp from "./components/Otp"
 import socket from "./services/Socket"
 import Call from "./components/shared/Call"
 import MessageNotification from "./components/shared/MessageNotification"
+import Banned from "./pages/shared/Banned"
 
 
 const App = () => {
@@ -34,28 +35,25 @@ const App = () => {
 		status: ""
 	})
 
+
 	useEffect(() => {
 		(async () => {
-			const type = localStorage.getItem("type");
-			let data
-			if (type) {
-				if (type == "student")
-					data = await Api.get("/student")
-				else if (type == "mentor")
-					data = await Api.get("/mentor")
-				else if (type == "admin")
-					data = await Api.get("/admin")
+			if (localStorage.getItem("token")) {
+				const { data } = await Api.get("/user")
 
-				if (data?.data.success) {
-					setUser(data.data.user)
-					console.log("user recieved")
+				if (data.success) {
+					setUser(data.user)
+					console.log(data)
+					if (data.user.status == "banned") {
+						navigate("/banned")
+					}
 					if (!user.verified) {
 						navigate("/otp")
 						console.log("going to otp")
 					}
 					socket.emit("user:add", data.data.user._id)
 				} else {
-					toast.error(data?.data.message)
+					toast.error(data?.data.messagzae)
 				}
 			}
 		})();
@@ -66,25 +64,12 @@ const App = () => {
 
 	}, [])
 
-	useEffect(() => {
-		const time = setTimeout(() => {
-			setCall(false)
-		}, 10000)
-
-		return () => {
-			clearTimeout(time)
-		}
-	}, [call])
-
 	return (
 		<UserContext.Provider value={{ user, setUser }}>
 			<ToastContainer draggable position="bottom-right" />
-			{
-				call &&
-				<Call setCall={setCall} name={user.name} id={caller._id} />
-			}
 			<Routes>
 				<Route path="/" element={<Home />} />
+				<Route path="/banned" element={<Banned />} />
 				<Route path="/otp" element={<Otp />} />
 				<Route path="/admin/*" element={<Admin />} />
 				<Route path="/mentor/*" element={<MentorRouter />} />

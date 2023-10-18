@@ -113,11 +113,17 @@ const Dashboard = () => {
             </div>
             <FontAwesomeIcon icon={faChevronRight} />
           </div>
-          {messages.map((e, i) => (
-            <div key={i}>
-              {e.sender.name}:{e.content}
-            </div>
-          ))}
+          <div className="flex flex-col items-center justify-center">
+            {
+              messages.length != 0 ?
+                messages.map((e, i) => (
+                  <div key={i}>
+                    {e.sender.name}:{e.content}
+                  </div>
+                )) :
+                <div>No messages</div>
+            }
+          </div>
         </Link>
       </div>
       <div className="w-full h-3/4 items-center shadow-xl p-2 border-[1px] justify-center hidden sm:flex text-blue-500">

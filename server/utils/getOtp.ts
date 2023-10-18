@@ -21,8 +21,8 @@ const getOtp = async (email: any) => {
         const transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-                user: "shadinmhd97@gmail.com",
-                pass: "qvnedkaiaeyjrpme"
+                user: process.env.EMAIL,
+                pass: process.env.EMAIL_PASS
             }
         })
 

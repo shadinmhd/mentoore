@@ -91,7 +91,10 @@ const Mentor = () => {
                       <TableCell>{moment(e.date).format("DD/MM/YYYY")}</TableCell>
                       <TableCell>{moment(e.startTime).format("HH:mm")}</TableCell>
                       <TableCell>
-                        <BookSlot refresh={setRefresh} date={e.date} id={e._id} startTime={e.startTime} />
+                        {
+                          localStorage.getItem("type") != "admin" &&
+                          <BookSlot refresh={setRefresh} date={e.date} id={e._id} startTime={e.startTime} />
+                        }
                       </TableCell>
                     </TableRow>
                   ))
