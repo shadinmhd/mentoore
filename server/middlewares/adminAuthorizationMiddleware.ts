@@ -11,6 +11,7 @@ const adminAuthorizationMiddleware = async (req: Request, res: Response, next: N
             })
 
         const payload = jwt.verify(token, process.env.jwt as string) as { type: string, id: string }
+        console.log(payload)
         if (payload.type == "Admin") {
             next()
         }
@@ -21,7 +22,7 @@ const adminAuthorizationMiddleware = async (req: Request, res: Response, next: N
             })
 
     } catch (err) {
-        console.log("adminAUthorizationMiddlewate.ts",err)
+        console.log("adminAUthorizationMiddlewate.ts", err)
         res.send({
             success: false,
             message: "please login first"
