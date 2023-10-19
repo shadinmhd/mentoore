@@ -8,15 +8,12 @@ import morgan from "morgan"
 import adminAuthorizatoinMiddleware from "./middlewares/adminAuthorizationMiddleware"
 import connectDb from "./configs/connectDb"
 import messageSocket from "./sockets/messageSocket"
-import https from "https"
+import http from "http"
 import fs from "fs"
 dotenv.config()
 
 const app = express()
-const server = https.createServer({
-    key: fs.readFileSync("./localhost+2-key.pem"),
-    cert: fs.readFileSync("./localhost+2.pem")
-}, app)
+const server = http.createServer(app)
 messageSocket(server)
 
 

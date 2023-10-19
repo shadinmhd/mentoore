@@ -24,7 +24,7 @@ const Admin = () => {
 
     useEffect(() => {
         if(localStorage.getItem("type")){
-            if(localStorage.getItem("type") != "admin"){
+            if(localStorage.getItem("type") != "Admin"){
                 toast.error("you are not authorized")
                 navigate("/")
             }

@@ -4,12 +4,6 @@ import path from "path"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-	server : {
-		https : {
-			key : "./localhost+1-key.pem",
-			cert : "./localhost+1.pem",
-		}
-	},
   plugins: [react()],
   resolve: {
     alias: {
