@@ -36,7 +36,7 @@ export const login = async (req: Request, res: Response) => {
         }
 
         const payload = {
-            type: userSearch.type.toLocaleLowerCase(),
+            type: userSearch.type,
             id: userSearch._id.toString()
         }
         const token = jwt.sign(payload, process.env.jwt as string)
