@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const ENDPOINT = "https://192.168.1.4:8000"
+const ENDPOINT = import.meta.env.VITE_BASEURL 
 
 const socket = io(ENDPOINT, {
     transports: ["websocket"]
