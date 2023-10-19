@@ -11,7 +11,7 @@ const adminAuthorizationMiddleware = async (req: Request, res: Response, next: N
             })
 
         const payload = jwt.verify(token, process.env.jwt as string) as { type: string, id: string }
-        if (payload.type == "admin") {
+        if (payload.type == "Admin") {
             next()
         }
         else

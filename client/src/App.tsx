@@ -51,7 +51,7 @@ const App = () => {
 					}
 					socket.emit("user:add", data.data.user._id)
 				} else {
-					toast.error(data?.data.messagzae)
+					toast.error(data?.data.message)
 				}
 			}
 		})();

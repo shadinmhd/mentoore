@@ -3,6 +3,7 @@ import Api from "@/services/Api"
 import { useEffect, useState } from "react"
 import { Line } from "react-chartjs-2"
 import { Link } from "react-router-dom"
+import { toast } from "react-toastify"
 
 const Dashboard = () => {
   const [userData, setUserData] = useState<{ _id: string, userCount: string }[]>([])
@@ -30,6 +31,8 @@ const Dashboard = () => {
         setSlots(data.slots)
         setNewMentors(data.newMentors)
         console.log(data)
+      }else{
+        toast.error(data.message)
       }
     })()
   }, [])
