@@ -4,9 +4,10 @@ import CancelBooking from "@/components/mentor/CancelBooking"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Api from "@/services/Api"
 import moment from "moment"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import SessionComplete from "@/components/mentor/SessionComplete"
+import UserContext from "@/context/UserContext"
 
 type BookingType = {
   _id: string;
@@ -23,6 +24,7 @@ const Bookings = () => {
 
   const [bookings, setBookings] = useState<BookingType[]>([])
   const [refresh, setRefresh] = useState(0)
+  const user = useContext(UserContext)
 
 
   useEffect(() => {
@@ -60,7 +62,7 @@ const Bookings = () => {
             </TableHead>
             <TableHead>
               {
-
+                !(user?.user.status == "new") &&
                 <NewBooking refresh={setRefresh} />
               }
             </TableHead>
@@ -88,6 +90,14 @@ const Bookings = () => {
           ))}
         </TableBody>
       </Table>
+      {
+        user?.user.status == "new" &&
+        <div className="bg-[rgba(255,255,255,0.9)] h-screen w-full flex items-center justify-center">
+          <div className="text-red-500">
+            you cannot create slots before admin veryfies your account
+          </div>
+        </div>
+      }
     </div>
 
   )

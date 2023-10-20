@@ -41,7 +41,7 @@ export const getAllMentors = async (req: Request, res: Response) => {
     try {
         const { page, category, name } = req.query
 
-        let query: any = { type: "Mentor", status : "active" }
+        let query: any = { status : "active" }
         if (category) {
             query.category = category
         }
@@ -49,12 +49,12 @@ export const getAllMentors = async (req: Request, res: Response) => {
             query.name = { $regex: name, $options: 'i' }
         }
         
-        const numbers = await User.countDocuments({status : "active"})
-        const mentors = await User.find(query, { password: 0 })
+        const numbers = await Mentor.countDocuments({status : "active"})
+        const mentors = await Mentor.find(query, { password: 0 })
             .skip((Number(page) - 1) * 15)
             .limit(15)
-
         console.log(req.query)
+
         res.send({
             success: true,
             message: "fetched all mentors",

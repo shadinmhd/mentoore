@@ -1,3 +1,4 @@
+import DeleteUser from '@/components/admin/user/DeleteUser'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -109,6 +110,7 @@ const User = () => {
         </div>
         <div className='flex items-center gap-3'>
           <Button onClick={handleSave} className='flex gap-2 items-center justify-center text-center' >Save <FontAwesomeIcon icon={faSave} /> </Button>
+          <DeleteUser id={id!} />
         </div>
       </div>
     </div >

@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator"
 import Api from "@/services/Api"
 import { useEffect, useState } from "react"
-import { Line } from "react-chartjs-2"
+import { Bar } from "react-chartjs-2"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
 
@@ -119,14 +119,14 @@ const Dashboard = () => {
       <div className="h-3/4 w-full p-2 flex items-center justify-center shadow-lg">
         {
           userData.length != 0 ?
-            <Line data={userChart} options={{ scales: { y: { type: "linear" } } }} /> :
+            <Bar data={userChart} options={{ scales: { y: { type: "linear" } } }} /> :
             <div> No data to show </div>
         }
       </div>
       <div className="h-3/4 w-full p-2 flex items-center justify-center shadow-lg">
         {
           slotData.length != 0 ?
-            <Line data={slotChart} options={{ scales: { y: { type: "linear" } } }} /> :
+            <Bar data={slotChart} options={{ scales: { y: { type: "linear" } } }} /> :
             <div> No data to show </div>
         }
       </div>

@@ -1,3 +1,4 @@
+import DeleteMentor from '@/components/admin/mentor/DeleteMentor'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -135,6 +136,7 @@ const Mentor = () => {
                 </div>
                 <div className='flex items-center gap-3'>
                     <Button onClick={handleSave} className='flex gap-2 items-center justify-center text-center' >Save <FontAwesomeIcon icon={faSave} /> </Button>
+                    <DeleteMentor id={id!} />
                 </div>
             </div>
         </div >
