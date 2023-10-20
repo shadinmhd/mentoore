@@ -31,6 +31,7 @@ const Settings = () => {
       const { data } = await Api.get(`/student`)
       if (data.success) {
         setUser(data.user)
+        console.log(data)
       } else {
         toast.error(data.message)
       }
@@ -71,7 +72,7 @@ const Settings = () => {
       <Avatar>
         <AvatarImage src={user?.image} />
         <AvatarFallback>
-          {user.name && user?.name[0].toUpperCase()}
+          {user?.name && user?.name[0].toUpperCase()}
         </AvatarFallback>
       </Avatar>
       <div className='flex flex-col gap-4 w-full'>
@@ -85,7 +86,7 @@ const Settings = () => {
         </div>
         <div className='flex gap-5 items-center'>
           <div>status: </div>
-          <div>{user.status}</div>
+          <div>{user?.status}</div>
         </div>
         <div className='flex gap-2 flex-col'>
             <ResetPassword />

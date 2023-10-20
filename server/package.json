@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "ts-node main.ts",
+    "start": "npx ts-node main.ts",
     "dev": "nodemon main.ts"
   },
   "keywords": [],
@@ -26,6 +26,7 @@
     "dotenv": "^16.3.1",
     "nodemon": "^3.0.1",
     "rimraf": "^5.0.1",
+    "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
   "dependencies": {

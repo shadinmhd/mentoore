@@ -49,9 +49,9 @@ const App = () => {
 						navigate("/otp")
 						console.log("going to otp")
 					}
-					socket.emit("user:add", data.data.user._id)
+					socket.emit("user:add", data.user._id)
 				} else {
-					toast.error(data?.data.message)
+					toast.error(data.message)
 				}
 			}
 		})();
