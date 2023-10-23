@@ -95,6 +95,7 @@ export const studentEdit = async (req: Request, res: Response) => {
     try {
         const { _id, name, email, image, status } = req.body
         console.log(req.body)
+        //
         const userSearch = await Student.findOne({ _id })
         if (!userSearch) {
             return res.send({
@@ -102,6 +103,7 @@ export const studentEdit = async (req: Request, res: Response) => {
                 message: "user doesn't exist"
             })
         }
+        // remove
 
         await Student.updateOne({ _id }, { name, email, image, status })
         res.send({

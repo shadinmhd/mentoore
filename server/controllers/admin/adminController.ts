@@ -1,6 +1,8 @@
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import { Admin } from "../../models/userModel"
+import pdfkit from "pdfkit"
+
 
 export const adminGet = async (req: Request, res: Response) => {
     try {
@@ -70,6 +72,18 @@ export const adminDelete = async (req: Request, res: Response) => {
     } catch (err) {
         console.log(err);
         res.send({
+            success: false,
+            message: "something went wrong"
+        })
+    }
+}
+
+export const getReport = (req: Request, res: Response) => {
+    try {
+        const pdf = new pdfkit()
+    } catch (err) {
+        console.log(err)
+        res.status(500).send({
             success: false,
             message: "something went wrong"
         })
