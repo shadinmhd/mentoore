@@ -2,12 +2,12 @@ import LoginForm from "@/components/LoginForm"
 import Navbar from "@/components/Navbar"
 
 const Login = () => {
-    return (
-        <div className='h-screen flex items-center justify-center'>
-            <Navbar />
-            <LoginForm />
-        </div>
-    )
+	return (
+		<div className='flex flex-col gap-32 h-screen items-center justify-start'>
+			<Navbar />
+			<LoginForm />
+		</div>
+	)
 }
 
 export default Login

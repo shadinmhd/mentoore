@@ -3,8 +3,7 @@ import UserRegisterForm from '@/components/user/RegisterForm'
 
 const UserRegister = () => {
     return (
-        <div className='flex h-screen items-center justify-center'>
-            <Navbar />
+        <div className='flex flex-col h-screen items-center justify-start'>
             <UserRegisterForm />
         </div>
     )

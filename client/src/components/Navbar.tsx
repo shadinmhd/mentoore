@@ -11,7 +11,7 @@ const Navbar = () => {
 
     return (
         <>
-            <header className='py-3 px-4 sm:px-10 fixed bg-white top-0 left-0 w-screen flex items-center justify-between'>
+            <header className='py-3 px-4 sm:px-10  bg-white w-screen flex items-center justify-between'>
                 <Link to="/" className='font-sans text-blue-600 sm:text-xl text-lg font-semibold'>
                     Mentoore
                 </Link>
