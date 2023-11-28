@@ -1,4 +1,3 @@
-import Navbar from '@/components/Navbar'
 import UserRegisterForm from '@/components/user/RegisterForm'
 
 const UserRegister = () => {
