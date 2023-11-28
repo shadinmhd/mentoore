@@ -45,8 +45,6 @@ const RegisterForm = () => {
 		})()
 	}, [])
 
-	console.log(form.watch())
-
 	const onSubmit = async (menotorData: Input) => {
 		try {
 			if (menotorData.password == menotorData.confirmPassword) {

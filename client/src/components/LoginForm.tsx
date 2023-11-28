@@ -23,8 +23,6 @@ const LoginForm = () => {
 		}
 	})
 
-	console.log(form.watch())
-
 	const onSubmit = async (logindata: Input) => {
 		try {
 			const { data } = await Api.post("/auth/login", logindata)

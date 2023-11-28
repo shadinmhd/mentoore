@@ -27,8 +27,6 @@ const RegisterForm = () => {
 
 	const navigate = useNavigate()
 
-	console.log(form.watch())
-
 	const onSubmit = async (userData: Input) => {
 		try {
 			if (userData.password == userData.confirmPassword) {
